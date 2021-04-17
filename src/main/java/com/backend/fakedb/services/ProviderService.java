@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import com.backend.fakedb.repositories.ProviderRepository;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,16 +55,40 @@ public class ProviderService {
         return null;
     }
 
-    /*public List<ProviderEntity> getWithCount(int skip, int count) {
-        return providerRepository.getWithCount(skip, count);
-    }*/
+    public List<ProviderEntity> getWithCount(int s, int c) {
+        List<ProviderEntity> listAll = getAll();
+
+        // The request skips all data
+        if (listAll.size() < s) {
+            return null;
+        }
+
+        List<ProviderEntity> listToReturn = new ArrayList<>(c);
+        for (int i = s; i < s + c; i++) {
+            listToReturn.add(listAll.get(i));
+        }
+        return listToReturn;
+    }
+
+    @Transactional
+    public void updateProvider(Integer id, String name, Double credibility, String avatar) {
+        ProviderEntity old = getById(id);
+        if (old == null) {
+            return;
+        }
+        providerRepository.update(id, (name == null ? old.getName() : name), (credibility == null ? old.getCredibility() : credibility), (avatar == null ? old.getAvatar() : avatar));
+    }
+
+    public void deleteProvider(Integer id) {
+        providerRepository.deleteById(id);
+    }
 
     /**
      * Public method that adds a ProviderEntity to the database.
      * @param providerEntity the entity to be added
      * @throws IllegalArgumentException if the parameter given is null
      */
-    public void addProviderEntity(ProviderEntity providerEntity) {
+    public void addProvider(ProviderEntity providerEntity) {
         providerRepository.save(providerEntity);
     }
 }
