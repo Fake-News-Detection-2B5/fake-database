@@ -5,6 +5,7 @@ import com.backend.fakedb.repositories.UserRepository;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,29 +13,53 @@ import java.util.Optional;
 @Service
 public class UserService {
 
+    @Autowired
     private final UserRepository userRepository;
 
-    @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    /**
-     * Public method that returns all users from the database.
-     * @return a List of UserEntity representing all users from the database
-     */
-    public List<UserEntity> getAll() {
+    public List<UserEntity> getUsers() {
         return userRepository.findAll();
     }
 
-    /**
-     * Public method that gets an user by a specified ID.
-     * @param id the ID to search by
-     * @return if the user is found, it is returned as a UserEntity. Otherwise, null is returned.
-     */
-    public UserEntity getById(Integer id) {
-        Optional<UserEntity> returnUser = userRepository.findById(id);
-        if (returnUser.isEmpty()) return null;
-        return returnUser.get();
+    public Optional<UserEntity> getUserById(Integer id) {
+        return userRepository.findById(id);
+    }
+
+    public boolean registerUser(UserEntity user) {
+        var maybeUser = userRepository.findAll().stream()
+                .filter(u -> u.getUsername().equals(user.getUsername()))
+                .findFirst();
+        if (maybeUser.isEmpty()) {
+            userRepository.save(user);
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean deleteUser(Integer id) {
+        if (userRepository.findById(id).isPresent()) {
+            userRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean deleteAllUsers() {
+        userRepository.deleteAll();
+        return true;
+    }
+
+    @Transactional
+    public boolean updateUser(Integer id, UserEntity user) {
+        if (userRepository.findById(id).isPresent()) {
+            userRepository.update(user.getUsername(), user.getAvatarUrl(), user.getBio(), user.getEmail(), id);
+            return true;
+        }
+
+        return false;
     }
 }
