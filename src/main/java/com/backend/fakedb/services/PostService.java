@@ -41,4 +41,12 @@ public class PostService {
         return listToReturn;
     }
 
+    public void add(PostEntity postEntity) {
+        postRepository.save(postEntity);
+    }
+
+    public void delete(Integer id) {
+        postRepository.deleteById(id);
+    }
+
 }
