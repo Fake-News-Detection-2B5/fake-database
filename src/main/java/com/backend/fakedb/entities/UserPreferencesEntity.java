@@ -3,19 +3,6 @@ package com.backend.fakedb.entities;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Embeddable
-class UserPreferencesPK implements Serializable {
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private UserEntity userEntity;
-
-    @ManyToOne
-    @JoinColumn(name = "provider_id")
-    private ProviderEntity providerEntity;
-
-
-}
-
 @Entity
 @Table
 public class UserPreferencesEntity {
@@ -48,5 +35,13 @@ public class UserPreferencesEntity {
 
     public void setSubscribed(boolean subscribed) {
         this.subscribed = subscribed;
+    }
+
+    public int getUserID() {
+        return id.getUserID();
+    }
+
+    public int getProviderID() {
+        return id.getProviderID();
     }
 }
