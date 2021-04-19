@@ -55,7 +55,7 @@ public class ProviderService {
         return null;
     }
 
-    public List<ProviderEntity> getWithCount(int s, int c) {
+    public List<ProviderEntity> getInterval(int s, int c) {
         List<ProviderEntity> listAll = getAll();
 
         // The request skips all data
@@ -76,7 +76,7 @@ public class ProviderService {
         if (old == null) {
             return;
         }
-        providerRepository.update(id, (name == null ? old.getName() : name), (credibility == null ? old.getCredibility() : credibility), (avatar == null ? old.getAvatar() : avatar));
+        providerRepository.update(id, (name.equals("") ? old.getName() : name), (credibility == null ? old.getCredibility() : credibility), (avatar.equals("") ? old.getAvatar() : avatar));
     }
 
     public void deleteProvider(Integer id) {
@@ -90,5 +90,9 @@ public class ProviderService {
      */
     public void addProvider(ProviderEntity providerEntity) {
         providerRepository.save(providerEntity);
+    }
+
+    public int getCount() {
+        return (int) providerRepository.count();
     }
 }

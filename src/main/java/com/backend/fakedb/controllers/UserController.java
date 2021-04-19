@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("users")
+@RequestMapping("user")
 public class UserController {
 
     @Autowired
@@ -20,8 +20,8 @@ public class UserController {
         return userService.getUsers();
     }
 
-    @GetMapping("/get/{id}")
-    public Optional<UserEntity> getUserById(@PathVariable Integer id) {
+    @GetMapping("/get")
+    public Optional<UserEntity> getUserById(@RequestParam(name = "id", required = true) Integer id) {
         return userService.getUserById(id);
     }
 
@@ -30,8 +30,8 @@ public class UserController {
         return userService.registerUser(user);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public boolean deleteUser(@PathVariable Integer id) {
+    @DeleteMapping("/delete")
+    public boolean deleteUser(@RequestParam(name = "id", required = true) Integer id) {
         return userService.deleteUser(id);
     }
 
@@ -40,8 +40,16 @@ public class UserController {
         return userService.deleteAllUsers();
     }
 
-    @PutMapping("/update/{id}")
-    public boolean updateUser(@PathVariable Integer id, @RequestBody UserEntity user) {
-        return userService.updateUser(id, user);
+    @PutMapping("/update")
+    public boolean updateUser(@RequestParam(name = "id") Integer id,
+                              @RequestParam(name = "bio", required = false, defaultValue = "") String bio) {
+        return userService.updateUser(id, bio);
+    }
+
+    @PostMapping("/dummy")
+    public void dummy() {
+        for (int i = 1; i < 10; i++) {
+            userService.registerUser(new UserEntity(i*i, "nume " + i, "www.avatar" + i + ".com", "Eu sunt user " + i, "user" + i + "@fakedb.com"));
+        }
     }
 }

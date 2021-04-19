@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import com.backend.fakedb.services.ProviderService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -19,12 +21,11 @@ public class ProviderController {
         this.providerService = providerService;
     }
 
-
     /**
      * Public method for requesting all providers from the database.
      * @return a List with every ProviderEntity from the database
      */
-    @GetMapping(path = "/getProviders")
+    @GetMapping(path = "/getAll")
     public List<ProviderEntity> getProviders() {
         return providerService.getAll();
     }
@@ -34,18 +35,19 @@ public class ProviderController {
      * @param id ID to search for
      * @return if found, the ProviderEntity is returned. Else, return null.
      */
-    @GetMapping(path = "/getProviders?id={id}")
-    public ProviderEntity getById(@PathVariable Integer id) {
+    @GetMapping(path = "/getById")
+    public ProviderEntity getById(@RequestParam(name = "id", required = true) Integer id) {
         return providerService.getById(id);
     }
+
 
     /**
      * Public method for requesting a specific provider
      * @param name name to search for
      * @return if found, the ProviderEntity is returned. Else, return null.
      */
-    @GetMapping(path = "/getProviders?name={name}")
-    public ProviderEntity getByName(@PathVariable String name) {
+    @GetMapping(path = "/getByName")
+    public ProviderEntity getByName(@RequestParam(name = "name", required = true) String name) {
         return providerService.getByName(name);
     }
 
@@ -55,16 +57,21 @@ public class ProviderController {
      * @param c how many rows are necessary
      * @return a List with the ProviderEntity requested
      */
-    @GetMapping(path = "/getProviders?skip={s}&count={c}")
-    public List<ProviderEntity> getWithCount(@PathVariable int s, @PathVariable int c) {
-        return providerService.getWithCount(s, c);
+    @GetMapping(path = "/getInterval")
+    public List<ProviderEntity> getInterval(@RequestParam(name = "skip", required = true) int s, @RequestParam(name = "count", required = true) int c) {
+        return providerService.getInterval(s, c);
+    }
+
+    @GetMapping(path = "/getCount")
+    public int getCount() {
+        return providerService.getCount();
     }
 
     /**
      * Public method which adds a new provider in the database
      * @param providerEntity the ProviderEntity received as a JSON
      */
-    @PostMapping(path = "/addProvider")
+    @PostMapping(path = "/add")
     public void addProvider(@RequestBody ProviderEntity providerEntity) {
         providerService.addProvider(providerEntity);
     }
@@ -76,8 +83,11 @@ public class ProviderController {
      * @param newCredibility the new credibility of the provider (if it is empty it will remain the same)
      * @param newAvatar the new avatar URL of the provider (if it is empty it will remain the same)
      */
-    @PutMapping(path = "/updateProvider?id={idToUpdate}&name={newName}&credibility={newCredibility}&avatar={newAvatar}")
-    public void updateProvider(@PathVariable Integer idToUpdate, @PathVariable String newName, @PathVariable Double newCredibility, @PathVariable String newAvatar) {
+    @PutMapping(path = "/update")
+    public void updateProvider(@RequestParam(name = "id", required = true) Integer idToUpdate,
+                               @RequestParam(name = "name", required = false, defaultValue = "") String newName,
+                               @RequestParam(name = "credibility", required = false, defaultValue = "") Double newCredibility,
+                               @RequestParam(name = "avatar", required = false, defaultValue = "") String newAvatar) {
         providerService.updateProvider(idToUpdate, newName, newCredibility, newAvatar);
     }
 
@@ -85,15 +95,15 @@ public class ProviderController {
      * Public method which deletes an existing provider
      * @param idToDelete the id of the provider to be deleted
      */
-    @DeleteMapping(path = "/deleteProvider?id={idToDelete}")
-    public void deleteProvider(@PathVariable Integer idToDelete) {
+    @DeleteMapping(path = "/delete")
+    public void deleteProvider(@RequestParam(name = "id", required = true) Integer idToDelete) {
         providerService.deleteProvider(idToDelete);
     }
 
     /**
      * Dummy method for fake adding fake data to the database.
      */
-    @PostMapping
+    @PostMapping("/dummy")
     public void dummy() {
         for (int i = 1; i < 10; i++) {
             providerService.addProvider(new ProviderEntity(i, "a" + (10 - i), 10 + i, "b" + i));

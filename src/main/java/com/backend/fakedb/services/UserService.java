@@ -54,9 +54,9 @@ public class UserService {
     }
 
     @Transactional
-    public boolean updateUser(Integer id, UserEntity user) {
+    public boolean updateUser(Integer id, String bio) {
         if (userRepository.findById(id).isPresent()) {
-            userRepository.update(user.getUsername(), user.getAvatarUrl(), user.getBio(), user.getEmail(), id);
+            userRepository.update(bio, id);
             return true;
         }
 
