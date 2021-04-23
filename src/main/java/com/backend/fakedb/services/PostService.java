@@ -49,4 +49,6 @@ public class PostService {
         postRepository.deleteById(id);
     }
 
+    // get la ingestion service (ala de e deployed pe heroku DE PE PARTEA LOR: heroku.ingestion/get
+
 }

@@ -1,48 +1,35 @@
 package com.backend.fakedb.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.sql.Date;
 
-@Entity
-@Table
-public class PostEntity {
-
-    // The associated ID
-    @Id
-    @GeneratedValue
+/**
+ * Entity representing the information coming from the Ingestion System
+ */
+public class IngestionEntity {
     Integer id;
 
-    // A URL to a thumbnail picture
-    String thumbnail;
-
-    // A title for the post
     String title;
 
-    // A short description associated with the current post
+    String thumbnail;
+
+    String content;
+
     String description;
 
-    // The date when the post was published
     Date postDate;
 
-    // The associated score, which can be either TRUE, FALSE or PARTIALLY FALSE
-    String score;
-
-    // The source URL
     String sourceUrl;
 
-    public PostEntity() {
+    public IngestionEntity() {
     }
 
-    public PostEntity(Integer id, String thumbnail, String title, String description, Date postDate, String score, String sourceUrl) {
+    public IngestionEntity(Integer id, String title, String thumbnail, String content, String description, Date postDate, String sourceUrl) {
         this.id = id;
-        this.thumbnail = thumbnail;
         this.title = title;
+        this.thumbnail = thumbnail;
+        this.content = content;
         this.description = description;
         this.postDate = postDate;
-        this.score = score;
         this.sourceUrl = sourceUrl;
     }
 
@@ -54,6 +41,14 @@ public class PostEntity {
         this.id = id;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getThumbnail() {
         return thumbnail;
     }
@@ -62,12 +57,12 @@ public class PostEntity {
         this.thumbnail = thumbnail;
     }
 
-    public String getTitle() {
-        return title;
+    public String getContent() {
+        return content;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getDescription() {
@@ -84,14 +79,6 @@ public class PostEntity {
 
     public void setPostDate(Date postDate) {
         this.postDate = postDate;
-    }
-
-    public String getScore() {
-        return score;
-    }
-
-    public void setScore(String score) {
-        this.score = score;
     }
 
     public String getSourceUrl() {
