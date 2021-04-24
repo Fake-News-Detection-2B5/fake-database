@@ -1,13 +1,10 @@
 package com.backend.fakedb.controllers;
 
 import com.backend.fakedb.entities.ProviderEntity;
+import com.backend.fakedb.services.ProviderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import com.backend.fakedb.services.ProviderService;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @RestController

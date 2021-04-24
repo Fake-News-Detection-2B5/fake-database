@@ -1,15 +1,12 @@
 package com.backend.fakedb.controllers;
 
 import com.backend.fakedb.entities.ProviderEntity;
-import com.backend.fakedb.entities.UserEntity;
 import com.backend.fakedb.entities.UserPreferencesEntity;
 import com.backend.fakedb.services.UserPreferencesService;
-import com.backend.fakedb.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("preferences")

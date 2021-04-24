@@ -2,13 +2,9 @@ package com.backend.fakedb.controllers;
 
 import com.backend.fakedb.entities.PostEntity;
 import com.backend.fakedb.services.PostService;
-import com.backend.fakedb.services.ProviderService;
-import com.backend.fakedb.utilities.IngestionLinker;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.parser.Part;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.MalformedURLException;
 import java.sql.Date;
 import java.util.List;
 import java.util.Optional;

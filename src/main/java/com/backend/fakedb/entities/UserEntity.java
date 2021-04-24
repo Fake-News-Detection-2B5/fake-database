@@ -78,4 +78,39 @@ public class UserEntity {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    @Override
+    public String toString() {
+        return "UserEntity{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", avatarUrl='" + avatarUrl + '\'' +
+                ", bio='" + bio + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserEntity that = (UserEntity) o;
+
+        if (!id.equals(that.id)) return false;
+        if (!username.equals(that.username)) return false;
+        if (!avatarUrl.equals(that.avatarUrl)) return false;
+        if (!bio.equals(that.bio)) return false;
+        return email.equals(that.email);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + username.hashCode();
+        result = 31 * result + avatarUrl.hashCode();
+        result = 31 * result + bio.hashCode();
+        result = 31 * result + email.hashCode();
+        return result;
+    }
 }
