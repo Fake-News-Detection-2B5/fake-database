@@ -95,4 +95,31 @@ public class ProviderService {
     public int getCount() {
         return (int) providerRepository.count();
     }
+
+    public int searchCount(String query) {
+        List<ProviderEntity> providerEntityList = getAll();
+        int provider_nr = 0;
+        for (ProviderEntity p : providerEntityList) {
+            if (p.getName().contains(query)) {
+                provider_nr++;
+            }
+        }
+        return provider_nr;
+    }
+
+    public List<ProviderEntity> search(String query, int s, int c) {
+        List<ProviderEntity> listAll = getAll();
+
+        // The request skips all data
+        if (listAll.size() < s) {
+            return null;
+        }
+
+        List<ProviderEntity> listToReturn = new ArrayList<>(c);
+        for (int i = s; i < s + c; i++) {
+            if(listAll.get(i).getName().contains(query))
+                listToReturn.add(listAll.get(i));
+        }
+        return listToReturn;
+    }
 }

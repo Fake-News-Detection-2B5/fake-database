@@ -33,7 +33,7 @@ public class IngestionLinker {
      * Test function until the ingestion system implements their own app.
      * Will be updated in the future with ProviderEntity -> IngestionEntity
      */
-    public List<PostEntity> getResponseFromIngestion(int skip, int count) throws MalformedURLException {
+    public List<PostEntity> getResponseFromIngestionInterval(int skip, int count) throws MalformedURLException {
         ResponseEntity<IngestionEntity[]> response =
                 ingestion.getForEntity("https://fake-database-fe-support.herokuapp.com/provider/getInterval?skip=" + skip + "&count=" + count, IngestionEntity[].class);
         IngestionEntity[] responseArray = response.getBody();
@@ -55,6 +55,8 @@ public class IngestionLinker {
         }
         return responseList;
     }
+
+
 
     /**
      * Private method that converts a given ingestion entity to a AI entity.

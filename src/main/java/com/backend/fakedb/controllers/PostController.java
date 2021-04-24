@@ -34,14 +34,31 @@ public class PostController {
     }
 
     @GetMapping(path = "/getInterval")
-    public List<PostEntity> getByInterval(@RequestParam(name = "skip", required = true) Integer skip,
+    public List<PostEntity> getInterval(@RequestParam(name = "skip", required = true) Integer skip,
                                           @RequestParam(name = "count", required = true) Integer count) {
         return postService.getInterval(skip, count);
         // Call the IngestionLinker class and get the results.
         /*
         IngestionLinker ingestionLinker = new IngestionLinker();
         try {
-            return ingestionLinker.getResponseFromIngestion(skip, count);
+            return ingestionLinker.getResponseFromIngestionInterval(skip, count);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return null;
+        */
+    }
+
+    @GetMapping(path = "/getIntervalByProvider")
+    public List<PostEntity> getIntervalByProvider(@RequestParam(name = "provider_id", required = true) Integer provider_id,
+                                                  @RequestParam(name = "skip", required = true) Integer skip,
+                                                  @RequestParam(name = "count", required = true) Integer count) {
+        return postService.getIntervalByProvider(provider_id, skip, count);
+        // Call the IngestionLinker class and get the results.
+        /*
+        IngestionLinker ingestionLinker = new IngestionLinker();
+        try {
+            return ingestionLinker.getResponseFromIngestionIntervalByProvider(provider_id, skip, count);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

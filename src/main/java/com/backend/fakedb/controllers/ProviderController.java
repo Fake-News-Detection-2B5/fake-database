@@ -68,6 +68,28 @@ public class ProviderController {
     }
 
     /**
+     * Public method for requesting the number of providers containing the provided string
+     * @param query used for providing the string to be searched within the names of the providers
+     * @return an integer
+     */
+    @GetMapping(path = "/searchCount")
+    public int searchCount(@RequestParam(name = "query", required = true) String query) {
+        return providerService.searchCount(query);
+    }
+
+    /**
+     * Public method for requesting a list of providers containing the provided string
+     * @param query used for providing the string to be searched within the names of the providers
+     * @param s used for skipping a number of rows from the database
+     * @param c how many rows are necessary
+     * @return a List with the ProviderEntity requested
+     */
+    @GetMapping(path = "/search")
+    public List<ProviderEntity> search(@RequestParam(name = "query", required = true) String query, @RequestParam(name = "skip", required = true) int s, @RequestParam(name = "count", required = true) int c) {
+        return providerService.search(query, s, c);
+    }
+
+    /**
      * Public method which adds a new provider in the database
      * @param providerEntity the ProviderEntity received as a JSON
      */
