@@ -88,7 +88,10 @@ public class UserPreferencesService {
         }
 
         var preferencesID = new UserPreferencesPK(user.get(), provider.get());
-        upRepository.deleteById(preferencesID);
+
+        if (upRepository.findById(preferencesID).isPresent()) {
+            upRepository.deleteById(preferencesID);
+        }
         upRepository.save(new UserPreferencesEntity(preferencesID, status));
     }
 }

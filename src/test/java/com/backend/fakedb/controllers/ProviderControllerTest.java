@@ -2,6 +2,7 @@ package com.backend.fakedb.controllers;
 
 import com.backend.fakedb.entities.ProviderEntity;
 import com.backend.fakedb.services.ProviderService;
+import com.backend.fakedb.utilities.IntWrapper;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -96,20 +97,20 @@ class ProviderControllerTest {
         JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
     }
 
-//    @Test
-//    void getCount() throws Exception {
-//
-//        Mockito.when(providerService.getCount()).thenReturn(10);
-//
-//        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/provider/getCount")
-//                .accept(MediaType.APPLICATION_JSON);
-//
-//        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-//        Mockito.verify(providerService, Mockito.times(1)).getCount();
-//
-//        String expected = "10";
-//        JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
-//    }
+    @Test
+    void getCount() throws Exception {
+
+        Mockito.when(providerService.getCount()).thenReturn(new IntWrapper(10));
+
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/provider/getCount")
+                .accept(MediaType.APPLICATION_JSON);
+
+        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+        Mockito.verify(providerService, Mockito.times(1)).getCount();
+
+        String expected = "{\"count\":10}";
+        JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
+    }
 
     @Test
     void add() throws Exception {
@@ -142,14 +143,14 @@ class ProviderControllerTest {
 
     @Test
     void searchCount() throws Exception {
-        Mockito.when(providerService.searchCount(Mockito.anyString())).thenReturn(1);
+        Mockito.when(providerService.searchCount(Mockito.anyString())).thenReturn(new IntWrapper(10));
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/provider/searchCount?query=digi");
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
         Mockito.verify(providerService, Mockito.times(1)).searchCount("digi");
 
-        String expected = "1";
+        String expected = "{\"count\":10}";
         JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
     }
 
