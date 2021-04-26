@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProviderService {
@@ -105,13 +106,13 @@ public class ProviderService {
      */
     public IntWrapper searchCount(String query) {
         List<ProviderEntity> providerEntityList = getAll();
-        int provider_nr = 0;
+        int providerNr = 0;
         for (ProviderEntity p : providerEntityList) {
             if (p.getName().contains(query)) {
-                provider_nr++;
+                providerNr++;
             }
         }
-        return new IntWrapper(provider_nr);
+        return new IntWrapper(providerNr);
     }
 
     /**
@@ -125,15 +126,27 @@ public class ProviderService {
     public List<ProviderEntity> search(String query, int s, int c) {
         List<ProviderEntity> listAll = getAll();
 
+        if (s < 0 || c < 1) {
+            return null;
+        }
+
         // The request skips all data
         if (listAll.size() < s) {
             return null;
         }
 
+        listAll = listAll.stream()
+                .filter(str -> str.getName().contains(query))
+                .collect(Collectors.toList());
+
         List<ProviderEntity> listToReturn = new ArrayList<>(c);
         for (int i = s; i < s + c; i++) {
-            if(listAll.get(i).getName().contains(query))
+            if (i >= listAll.size()) {
+                listToReturn.add(null);
+            }
+            else {
                 listToReturn.add(listAll.get(i));
+            }
         }
         return listToReturn;
     }

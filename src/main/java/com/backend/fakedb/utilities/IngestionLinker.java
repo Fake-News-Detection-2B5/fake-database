@@ -75,7 +75,31 @@ public class IngestionLinker {
      * @return the specified list
      */
     public List<PostEntity> getIntervalByProvider(int providerId, int skip, int count) {
-        return null;
+        if (skip < 0 || count < 1) {
+            return null;
+        }
+
+        // The response will return posts from the database provided by provider_id, according to the skip and count parameters
+        ResponseEntity<IngestionEntity[]> response =
+                ingestion.getForEntity("url-to-ingestion-system?provider_id=provider_id&skip=skip&count=count", IngestionEntity[].class);
+        IngestionEntity[] ingestionArray = response.getBody();
+
+        // If the list is null or the skip is too big, don't continue.
+        if (ingestionArray == null || skip >= ingestionArray.length) {
+            return null;
+        }
+
+        List<PostEntity> responseList = new ArrayList<>(ingestionArray.length);
+
+        for (int i = 0; i < ingestionArray.length; i++) {
+            // We need to sent an AiEntity to the AI module and get the associated result
+            ScoreResult responseScore = ingestion.postForObject("url-to-ai-module", convertToAiEntity(ingestionArray[i]), ScoreResult.class);
+
+            // We need to build a PostEntity with the associated score and information
+            assert responseScore != null;
+            responseList.set(i, convertToPostEntity(ingestionArray[i], responseScore.getScore()));
+        }
+        return responseList;
     }
 
     /**
