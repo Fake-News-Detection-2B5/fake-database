@@ -19,13 +19,26 @@ public class PostController {
         this.postService = postService;
     }
 
+    /**
+     * Public method for getting all posts from the ingestion system
+     * @return a list containing all the posts
+     * @deprecated Method no longer needed, used only for fake data.
+     */
+    @Deprecated
     @GetMapping(path = "/getAll")
     public List<PostEntity> getAll() {
         return postService.getAll();
     }
 
+    /**
+     * Public method for getting (from the repo) a specific post based on an ID.
+     * @param id the id of the post
+     * @return the post if it is found, null otherwise.
+     * @deprecated Method no longer needed
+     */
+    @Deprecated
     @GetMapping(path = "/getById")
-    public Optional<PostEntity> getById(@RequestParam(name = "id", required = true) Integer id) {
+    public PostEntity getById(@RequestParam(name = "id", required = true) Integer id) {
         return postService.getById(id);
     }
 
@@ -33,16 +46,6 @@ public class PostController {
     public List<PostEntity> getInterval(@RequestParam(name = "skip", required = true) Integer skip,
                                           @RequestParam(name = "count", required = true) Integer count) {
         return postService.getInterval(skip, count);
-        // Call the IngestionLinker class and get the results.
-        /*
-        IngestionLinker ingestionLinker = new IngestionLinker();
-        try {
-            return ingestionLinker.getResponseFromIngestionInterval(skip, count);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        return null;
-        */
     }
 
     @GetMapping(path = "/getIntervalByProvider")
@@ -50,16 +53,6 @@ public class PostController {
                                                   @RequestParam(name = "skip", required = true) Integer skip,
                                                   @RequestParam(name = "count", required = true) Integer count) {
         return postService.getIntervalByProvider(provider_id, skip, count);
-        // Call the IngestionLinker class and get the results.
-        /*
-        IngestionLinker ingestionLinker = new IngestionLinker();
-        try {
-            return ingestionLinker.getResponseFromIngestionIntervalByProvider(provider_id, skip, count);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        return null;
-        */
     }
 
     @PostMapping(path = "/add")

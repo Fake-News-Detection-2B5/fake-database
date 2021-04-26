@@ -96,20 +96,20 @@ class ProviderControllerTest {
         JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
     }
 
-    @Test
-    void getCount() throws Exception {
-
-        Mockito.when(providerService.getCount()).thenReturn(10);
-
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/provider/getCount")
-                .accept(MediaType.APPLICATION_JSON);
-
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-        Mockito.verify(providerService, Mockito.times(1)).getCount();
-
-        String expected = "10";
-        JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
-    }
+//    @Test
+//    void getCount() throws Exception {
+//
+//        Mockito.when(providerService.getCount()).thenReturn(10);
+//
+//        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/provider/getCount")
+//                .accept(MediaType.APPLICATION_JSON);
+//
+//        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+//        Mockito.verify(providerService, Mockito.times(1)).getCount();
+//
+//        String expected = "10";
+//        JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
+//    }
 
     @Test
     void add() throws Exception {

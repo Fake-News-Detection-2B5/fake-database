@@ -18,9 +18,11 @@ import java.util.List;
 
 /**
  * Class that handles the communication between the ingestion system and this app.
+ *
+ * It requests the posts from the ingestion system then it splits every post into two:
+ * an AiEntity (which will be sent to the AI module) and a PostEntity which will be constructed
+ * with information from the ingestion and the examination result (how likely it is to be fake news).
  */
-
-// TEST LINK: https://fake-database-fe-support.herokuapp.com/provider/getInterval?skip=4&count=3
 public class IngestionLinker {
 
     RestTemplate ingestion;
@@ -30,33 +32,51 @@ public class IngestionLinker {
     }
 
     /**
-     * Test function until the ingestion system implements their own app.
-     * Will be updated in the future with ProviderEntity -> IngestionEntity
+     * Public method for getting a list of PostEntity objects from the posts database.
+     * If the given arguments surpass the amount of rows in the database, null objects will be added to the list.
+     * @param skip the amount of rows to skip (must be a number greater than or equal to zero)
+     * @param count the amount of rows to receive (must be a number greater than zero)
+     * @return the specified list
      */
-    public List<PostEntity> getResponseFromIngestionInterval(int skip, int count) throws MalformedURLException {
-        ResponseEntity<IngestionEntity[]> response =
-                ingestion.getForEntity("https://fake-database-fe-support.herokuapp.com/provider/getInterval?skip=" + skip + "&count=" + count, IngestionEntity[].class);
-        IngestionEntity[] responseArray = response.getBody();
-
-        // If the list is null, don't continue.
-        if (responseArray == null) {
+    public List<PostEntity> getInterval(int skip, int count) {
+        if (skip < 0 || count < 1) {
             return null;
         }
 
-        List<PostEntity> responseList = new ArrayList<>(responseArray.length);
+        // The response will return posts from the database, according to the skip and count parameters
+        ResponseEntity<IngestionEntity[]> response =
+                ingestion.getForEntity("url-to-ingestion-system?skip=skip&count=count", IngestionEntity[].class);
+        IngestionEntity[] ingestionArray = response.getBody();
 
-        for (int i = 0; i < responseArray.length; i++) {
+        // If the list is null or the skip is too big, don't continue.
+        if (ingestionArray == null || skip >= ingestionArray.length) {
+            return null;
+        }
+
+        List<PostEntity> responseList = new ArrayList<>(ingestionArray.length);
+
+        for (int i = 0; i < ingestionArray.length; i++) {
             // We need to sent an AiEntity to the AI module and get the associated result
-            ScoreResult responseScore = ingestion.postForObject("url-to-ai-module", convertToAiEntity(responseArray[i]), ScoreResult.class);
+            ScoreResult responseScore = ingestion.postForObject("url-to-ai-module", convertToAiEntity(ingestionArray[i]), ScoreResult.class);
 
             // We need to build a PostEntity with the associated score and information
             assert responseScore != null;
-            responseList.set(i, convertToPostEntity(responseArray[i], responseScore.getScore()));
+            responseList.set(i, convertToPostEntity(ingestionArray[i], responseScore.getScore()));
         }
         return responseList;
     }
 
-
+    /**
+     * Public method for getting a list of posts by a specific provider.
+     *  If the given arguments surpass the amount of rows in the database, null objects will be added to the list.
+     * @param providerId the provider ID to get posts from
+     * @param skip the amount of posts to be skipped (needs to be greater than or equal to zero)
+     * @param count the number of posts to receive (needs to be greater that zero)
+     * @return the specified list
+     */
+    public List<PostEntity> getIntervalByProvider(int providerId, int skip, int count) {
+        return null;
+    }
 
     /**
      * Private method that converts a given ingestion entity to a AI entity.

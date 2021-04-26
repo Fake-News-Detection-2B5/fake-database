@@ -2,6 +2,7 @@ package com.backend.fakedb.controllers;
 
 import com.backend.fakedb.entities.ProviderEntity;
 import com.backend.fakedb.services.ProviderService;
+import com.backend.fakedb.utilities.IntWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,7 @@ public class ProviderController {
     }
 
     /**
-     * Public method for requesting all providers from the database.
+     * Public method for requesting all providers from the database
      * @return a List with every ProviderEntity from the database
      */
     @GetMapping(path = "/getAll")
@@ -31,7 +32,10 @@ public class ProviderController {
      * Public method for requesting a specific provider
      * @param id ID to search for
      * @return if found, the ProviderEntity is returned. Else, return null.
+     * @deprecated
+     * Method no longer needed
      */
+    @Deprecated
     @GetMapping(path = "/getById")
     public ProviderEntity getById(@RequestParam(name = "id", required = true) Integer id) {
         return providerService.getById(id);
@@ -42,14 +46,17 @@ public class ProviderController {
      * Public method for requesting a specific provider
      * @param name name to search for
      * @return if found, the ProviderEntity is returned. Else, return null.
+     * @deprecated
+     * Method no longer needed
      */
+    @Deprecated
     @GetMapping(path = "/getByName")
     public ProviderEntity getByName(@RequestParam(name = "name", required = true) String name) {
         return providerService.getByName(name);
     }
 
     /**
-     * Public method for requesting a specific number of providers
+     * Public method for requesting a specific number of providers from the database
      * @param s used for skipping a number of rows from the database
      * @param c how many rows are necessary
      * @return a List with the ProviderEntity requested
@@ -59,18 +66,22 @@ public class ProviderController {
         return providerService.getInterval(s, c);
     }
 
+    /**
+     * Public method for requesting the total number of providers enlisted in the database
+     * @return the number of providers as a IntWrapper class
+     */
     @GetMapping(path = "/getCount")
-    public int getCount() {
+    public IntWrapper getCount() {
         return providerService.getCount();
     }
 
     /**
      * Public method for requesting the number of providers containing the provided string
      * @param query used for providing the string to be searched within the names of the providers
-     * @return an integer
+     * @return an IntWrapper containing the number of providers
      */
     @GetMapping(path = "/searchCount")
-    public int searchCount(@RequestParam(name = "query", required = true) String query) {
+    public IntWrapper searchCount(@RequestParam(name = "query", required = true) String query) {
         return providerService.searchCount(query);
     }
 
