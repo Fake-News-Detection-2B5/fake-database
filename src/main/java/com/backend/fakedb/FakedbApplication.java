@@ -11,13 +11,6 @@ public class FakedbApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(FakedbApplication.class, args);
-
-		IngestionLinker ingestionLinker = new IngestionLinker();
-		try {
-			ingestionLinker.getResponseFromIngestion(1, 3);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
 	}
 
 }
