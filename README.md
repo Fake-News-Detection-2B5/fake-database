@@ -18,9 +18,9 @@ HTTP requests can be issued to [this](https://fake-database-fe-support.herokuapp
     <dt><em>/getCount</em></dt>
     <dd>Returns the number of providers.</dd>
     <dt><em>/searchCount?query={query}</em></dt>
-    <dd>Returns the number of providers that contain the QUERY string</dd>
+    <dd>Returns the number of providers that contain the QUERY string.</dd>
     <dt><em>/search</em></dt>
-    <dd>Given a skip and count values, it returns a list of COUNT providers that contain the QUERY string skipping SKIP rows from the database</dd>
+    <dd>Given a skip and count values, it returns a list of COUNT providers that contain the QUERY string skipping SKIP rows from the database.</dd>
 </dl></li>
 
 <li><dl> <strong>POST</strong> requests
@@ -81,7 +81,7 @@ HTTP requests can be issued to [this](https://fake-database-fe-support.herokuapp
     <dd>Returns the post with the specified ID (if it exists).</dd>
     <dt><em>/getInterval?skip={skip}&count={count}</em></dt>
     <dd>Skips the first <strong>SKIP</strong> posts and returns the next <strong>COUNT</strong> posts.</dd>
-    <dt><em>/getIntervalByProvider?provider_id={}&skip={skip}&count={count}</em></dt>
+    <dt><em>/getIntervalByProvider?provider_id={provider_id}&skip={skip}&count={count}</em></dt>
     <dd>Skips the first <strong>SKIP</strong> posts and returns the next <strong>COUNT</strong> posts from the provider with <strong>PROVIDER_ID</strong>.</dd>
 </dl></li>
 
