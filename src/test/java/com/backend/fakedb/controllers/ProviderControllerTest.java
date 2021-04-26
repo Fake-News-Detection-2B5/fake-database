@@ -139,4 +139,31 @@ class ProviderControllerTest {
         mockMvc.perform(requestBuilder);
         Mockito.verify(providerService, Mockito.times(1)).deleteProvider(1);
     }
+
+    @Test
+    void searchCount() throws Exception {
+        Mockito.when(providerService.searchCount(Mockito.anyString())).thenReturn(1);
+
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/provider/searchCount?query=digi");
+        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+
+        Mockito.verify(providerService, Mockito.times(1)).searchCount("digi");
+
+        String expected = "1";
+        JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
+    }
+
+    @Test
+    void search() throws Exception {
+        Mockito.when(providerService.search(Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt()))
+                .thenReturn(Collections.emptyList());
+
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/provider/search?query=digi&skip=1&count=1");
+        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+
+        Mockito.verify(providerService, Mockito.times(1)).search("digi", 1, 1);
+
+        String expected = "[]";
+        JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
+    }
 }

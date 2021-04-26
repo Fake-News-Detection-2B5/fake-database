@@ -40,4 +40,19 @@ class PostControllerTest {
         String expected = "[]";
         JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
     }
+
+    @Test
+    void getIntervalByProvider() throws Exception {
+        Mockito.when(postService.getIntervalByProvider(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt()))
+                .thenReturn(Collections.emptyList());
+
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/post/getIntervalByProvider?provider_id=69&skip=420&count=1337")
+                .accept(MediaType.APPLICATION_JSON);
+
+        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+        Mockito.verify(postService, Mockito.times(1)).getIntervalByProvider(69, 420, 1337);
+
+        String expected = "[]";
+        JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
+    }
 }
