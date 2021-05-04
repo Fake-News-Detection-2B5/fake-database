@@ -35,15 +35,13 @@ public class UserPreferencesService {
     }
 
     public boolean subscribeUserToProviders(int uid, List<Integer> providerIDs) {
-        for (var prov_id : providerIDs) {
 
+        for (var prov_id : providerIDs) {
             var user = userRepository.findById(uid);
             var provider = providerRepository.findById(prov_id);
-
             if (user.isEmpty() || provider.isEmpty()) {
                 return false;
             }
-
             upRepository.save(new UserPreferencesEntity(new UserPreferencesPK(user.get(), provider.get()), true));
         }
         return true;
@@ -52,7 +50,6 @@ public class UserPreferencesService {
     public boolean isSubscribed(int uid, int prov_id) {
         var user = userRepository.findById(uid);
         var provider = providerRepository.findById(prov_id);
-
         if (user.isEmpty() || provider.isEmpty()) {
             return false;
         }
@@ -61,7 +58,6 @@ public class UserPreferencesService {
         if (result.isEmpty()) {
             return false;
         }
-
         return result.get().isSubscribed();
     }
 
@@ -79,19 +75,18 @@ public class UserPreferencesService {
                 .collect(Collectors.toList());
     }
 
-    public void updateSubscriptionStatus(int uid, int prov_id, boolean status) {
+    public boolean updateSubscriptionStatus(int uid, int prov_id, boolean status) {
         var user = userRepository.findById(uid);
         var provider = providerRepository.findById(prov_id);
-
         if (user.isEmpty() || provider.isEmpty()) {
-            return;
+            return false;
         }
 
         var preferencesID = new UserPreferencesPK(user.get(), provider.get());
-
         if (upRepository.findById(preferencesID).isPresent()) {
             upRepository.deleteById(preferencesID);
         }
         upRepository.save(new UserPreferencesEntity(preferencesID, status));
+        return true;
     }
 }

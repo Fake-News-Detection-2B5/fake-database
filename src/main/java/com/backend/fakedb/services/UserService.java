@@ -36,7 +36,6 @@ public class UserService {
             userRepository.save(user);
             return true;
         }
-
         return false;
     }
 
@@ -59,7 +58,6 @@ public class UserService {
             userRepository.update(bio, id);
             return true;
         }
-
         return false;
     }
 }
