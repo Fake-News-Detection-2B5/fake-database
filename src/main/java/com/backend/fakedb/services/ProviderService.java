@@ -1,13 +1,12 @@
 package com.backend.fakedb.services;
 
 import com.backend.fakedb.entities.ProviderEntity;
+import com.backend.fakedb.repositories.ProviderRepository;
 import com.backend.fakedb.utilities.IntWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.backend.fakedb.repositories.ProviderRepository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -71,24 +70,29 @@ public class ProviderService {
             return null;
         }
 
-        List<ProviderEntity> listAll = providerRepository.findAll();
+//        List<ProviderEntity> listAll = providerRepository.findAll();
+//
+//        // The request skips all data
+//        if (listAll.size() < s) {
+//            return null;
+//        }
+//
+//        List<ProviderEntity> listToReturn = new ArrayList<>(c);
+//        for (int i = s; i < s + c; i++) {
+//            // If no more rows are available, add null items to the list
+//            if (i >= listAll.size()) {
+//                listToReturn.add(null);
+//            }
+//            else {
+//                listToReturn.add(listAll.get(i));
+//            }
+//        }
+//        return listToReturn;
 
-        // The request skips all data
-        if (listAll.size() < s) {
-            return null;
-        }
-
-        List<ProviderEntity> listToReturn = new ArrayList<>(c);
-        for (int i = s; i < s + c; i++) {
-            // If no more rows are available, add null items to the list
-            if (i >= listAll.size()) {
-                listToReturn.add(null);
-            }
-            else {
-                listToReturn.add(listAll.get(i));
-            }
-        }
-        return listToReturn;
+        return providerRepository.findAll().stream()
+                .skip(s)
+                .limit(c)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -105,13 +109,16 @@ public class ProviderService {
      * @return an IntWrapper containing the number of providers
      */
     public IntWrapper searchCount(String query) {
-        List<ProviderEntity> providerEntityList = getAll();
-        int providerNr = 0;
-        for (ProviderEntity p : providerEntityList) {
-            if (p.getName().contains(query)) {
-                providerNr++;
-            }
-        }
+//        List<ProviderEntity> providerEntityList = providerRepository.findAll();
+//        int providerNr = 0;
+//        for (ProviderEntity p : providerEntityList) {
+//            if (p.getName().contains(query)) {
+//                providerNr++;
+//            }
+//        }
+        int providerNr = (int) providerRepository.findAll().stream()
+                .filter(p -> p.getName().contains(query))
+                .count();
         return new IntWrapper(providerNr);
     }
 
@@ -124,31 +131,37 @@ public class ProviderService {
      * @return a list with the objects requested
      */
     public List<ProviderEntity> search(String query, int s, int c) {
-        List<ProviderEntity> listAll = getAll();
-
         if (s < 0 || c < 1) {
             return null;
         }
 
-        // The request skips all data
-        if (listAll.size() < s) {
-            return null;
-        }
+//        List<ProviderEntity> listAll = providerRepository.findAll();
+//
+//        // The request skips all data
+//        if (listAll.size() < s) {
+//            return null;
+//        }
+//
+//        listAll = listAll.stream()
+//                .filter(str -> str.getName().contains(query))
+//                .collect(Collectors.toList());
+//
+//        List<ProviderEntity> listToReturn = new ArrayList<>(c);
+//        for (int i = s; i < s + c; i++) {
+//            if (i >= listAll.size()) {
+//                listToReturn.add(null);
+//            }
+//            else {
+//                listToReturn.add(listAll.get(i));
+//            }
+//        }
+//        return listToReturn;
 
-        listAll = listAll.stream()
+        return providerRepository.findAll().stream()
                 .filter(str -> str.getName().contains(query))
+                .skip(s)
+                .limit(c)
                 .collect(Collectors.toList());
-
-        List<ProviderEntity> listToReturn = new ArrayList<>(c);
-        for (int i = s; i < s + c; i++) {
-            if (i >= listAll.size()) {
-                listToReturn.add(null);
-            }
-            else {
-                listToReturn.add(listAll.get(i));
-            }
-        }
-        return listToReturn;
     }
 
     /**

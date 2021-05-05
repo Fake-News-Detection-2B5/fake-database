@@ -6,22 +6,28 @@ import com.backend.fakedb.utilities.IngestionLinker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class PostService {
 
     // Left for compatibility reasons
     private final PostRepository postRepository;
-    private final IngestionLinker ingestionLinker;
+
+    private IngestionLinker ingestionLinker;
 
     @Autowired
     public PostService(PostRepository postRepository) {
         this.postRepository = postRepository;
         ingestionLinker = new IngestionLinker();
+    }
+
+    // Only used in unit tests in order to inject a mock into the PostService class
+    // TODO: In order for this method to not be exposed, simulating a friend class
+    //       that would instead set the IngestionLinker reference would be better
+    public void setLinker(IngestionLinker injectionLinker) {
+        this.ingestionLinker = injectionLinker;
     }
 
     /**
