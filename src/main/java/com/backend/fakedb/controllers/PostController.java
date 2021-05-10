@@ -38,7 +38,7 @@ public class PostController {
      * @deprecated Method no longer needed
      */
     @Deprecated
-    @GetMapping(path = "/getById")
+    @GetMapping(path = "/private/getById")
     public PostEntity getById(@RequestParam(name = "id", required = true) Integer id) {
         return postService.getById(id);
     }
