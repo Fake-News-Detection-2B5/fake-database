@@ -26,7 +26,7 @@ public class PostController {
      * @deprecated Method no longer needed, used only for fake data.
      */
     @Deprecated
-    @GetMapping(path = "/getAll")
+    @GetMapping(path = "/public/getAll")
     public List<PostEntity> getAll() {
         return postService.getAll();
     }
