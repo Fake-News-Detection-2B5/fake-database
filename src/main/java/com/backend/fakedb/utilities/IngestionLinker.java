@@ -45,7 +45,7 @@ public class IngestionLinker {
 
         // The response will return posts from the database, according to the skip and count parameters
         ResponseEntity<IngestionEntity[]> response =
-                ingestion.getForEntity("url-to-ingestion-system?skip=skip&count=count", IngestionEntity[].class);
+                ingestion.getForEntity("https://fake-news-detection-ingestion.herokuapp.com/v1/api/news?skip=" + skip + "&count=" + count, IngestionEntity[].class);
         IngestionEntity[] ingestionArray = response.getBody();
 
         // If the list is null or the skip is too big, don't continue.
@@ -57,7 +57,7 @@ public class IngestionLinker {
 
         for (int i = 0; i < ingestionArray.length; i++) {
             // We need to sent an AiEntity to the AI module and get the associated result
-            ScoreResult responseScore = ingestion.postForObject("url-to-ai-module", convertToAiEntity(ingestionArray[i]), ScoreResult.class);
+            ScoreResult responseScore = ingestion.postForObject("https://ai-communication-module.herokuapp.com/ai-module/", convertToAiEntity(ingestionArray[i]), ScoreResult.class);
 
             // We need to build a PostEntity with the associated score and information
             assert responseScore != null;
@@ -81,7 +81,7 @@ public class IngestionLinker {
 
         // The response will return posts from the database provided by provider_id, according to the skip and count parameters
         ResponseEntity<IngestionEntity[]> response =
-                ingestion.getForEntity("url-to-ingestion-system?provider_id=provider_id&skip=skip&count=count", IngestionEntity[].class);
+                ingestion.getForEntity("https://fake-news-detection-ingestion.herokuapp.com/v1/api/news?provider_id=" + providerId + "&skip=" + skip + "&count=" + count, IngestionEntity[].class);
         IngestionEntity[] ingestionArray = response.getBody();
 
         // If the list is null or the skip is too big, don't continue.
@@ -93,7 +93,7 @@ public class IngestionLinker {
 
         for (int i = 0; i < ingestionArray.length; i++) {
             // We need to sent an AiEntity to the AI module and get the associated result
-            ScoreResult responseScore = ingestion.postForObject("url-to-ai-module", convertToAiEntity(ingestionArray[i]), ScoreResult.class);
+            ScoreResult responseScore = ingestion.postForObject("https://ai-communication-module.herokuapp.com/ai-module/", convertToAiEntity(ingestionArray[i]), ScoreResult.class);
 
             // We need to build a PostEntity with the associated score and information
             assert responseScore != null;
@@ -108,7 +108,8 @@ public class IngestionLinker {
      * @return the AI entity
      */
     private AiEntity convertToAiEntity(IngestionEntity ingestionEntity) {
-        return new AiEntity(ingestionEntity.getTitle(),
+        return new AiEntity(ingestionEntity.getId(),
+                            ingestionEntity.getTitle(),
                             ingestionEntity.getContent());
     }
 

@@ -8,12 +8,17 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("preferences")
 public class UserPreferencesController {
 
+    private final UserPreferencesService upService;
+
     @Autowired
-    private UserPreferencesService upService;
+    public UserPreferencesController(UserPreferencesService upService) {
+        this.upService = upService;
+    }
 
     @GetMapping("/getAll")
     public List<UserPreferencesEntity> getPreferences() {
