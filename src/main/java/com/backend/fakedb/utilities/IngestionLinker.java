@@ -61,7 +61,7 @@ public class IngestionLinker {
 
             // We need to build a PostEntity with the associated score and information
             assert responseScore != null;
-            responseList.set(i, convertToPostEntity(ingestionArray[i], responseScore.getScore()));
+            responseList.add(i, convertToPostEntity(ingestionArray[i], responseScore.getScore()));
         }
         return responseList;
     }
@@ -97,7 +97,7 @@ public class IngestionLinker {
 
             // We need to build a PostEntity with the associated score and information
             assert responseScore != null;
-            responseList.set(i, convertToPostEntity(ingestionArray[i], responseScore.getScore()));
+            responseList.add(i, convertToPostEntity(ingestionArray[i], responseScore.getScore()));
         }
         return responseList;
     }
