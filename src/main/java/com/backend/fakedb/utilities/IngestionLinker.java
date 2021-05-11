@@ -108,7 +108,7 @@ public class IngestionLinker {
      * @return the AI entity
      */
     private AiEntity convertToAiEntity(IngestionEntity ingestionEntity) {
-        return new AiEntity(ingestionEntity.getId(),
+        return new AiEntity(ingestionEntity.getId().hashCode(),
                             ingestionEntity.getTitle(),
                             ingestionEntity.getContent());
     }
@@ -120,7 +120,7 @@ public class IngestionLinker {
      * @return the Post entity
      */
     private PostEntity convertToPostEntity(IngestionEntity ingestionEntity, String score) {
-        return new PostEntity(ingestionEntity.getId(),
+        return new PostEntity(ingestionEntity.getId().hashCode(),
                                 ingestionEntity.getTitle(),
                                 ingestionEntity.getThumbnail(),
                                 ingestionEntity.getDescription(),

@@ -1,12 +1,13 @@
 package com.backend.fakedb.entities;
 
 import java.sql.Date;
+import java.util.UUID;
 
 /**
  * Entity representing the information coming from the Ingestion System
  */
 public class IngestionEntity {
-    Integer id;
+    UUID id;
 
     String title;
 
@@ -23,7 +24,7 @@ public class IngestionEntity {
     public IngestionEntity() {
     }
 
-    public IngestionEntity(Integer id, String title, String thumbnail, String content, String description, Date postDate, String sourceUrl) {
+    public IngestionEntity(UUID id, String title, String thumbnail, String content, String description, Date postDate, String sourceUrl) {
         this.id = id;
         this.title = title;
         this.thumbnail = thumbnail;
@@ -33,11 +34,11 @@ public class IngestionEntity {
         this.sourceUrl = sourceUrl;
     }
 
-    public Integer getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
