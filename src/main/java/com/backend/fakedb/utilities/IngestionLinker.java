@@ -45,7 +45,7 @@ public class IngestionLinker {
 
         // The response will return posts from the database, according to the skip and count parameters
         ResponseEntity<IngestionEntity[]> response =
-                ingestion.getForEntity("https://fake-news-detection-ingestion.herokuapp.com/v1/api/news?skip=" + skip + "&count=" + count, IngestionEntity[].class);
+                ingestion.getForEntity("https://fake-news-detection-ingestion.herokuapp.com/v1/api/news/getInterval?skip=" + skip + "&count=" + count, IngestionEntity[].class);
         IngestionEntity[] ingestionArray = response.getBody();
 
         // If the list is null or the skip is too big, don't continue.
@@ -81,7 +81,7 @@ public class IngestionLinker {
 
         // The response will return posts from the database provided by provider_id, according to the skip and count parameters
         ResponseEntity<IngestionEntity[]> response =
-                ingestion.getForEntity("https://fake-news-detection-ingestion.herokuapp.com/v1/api/news?provider_id=" + providerId + "&skip=" + skip + "&count=" + count, IngestionEntity[].class);
+                ingestion.getForEntity("https://fake-news-detection-ingestion.herokuapp.com/v1/api/news/getIntervalByProvider?provider_id=" + providerId + "&skip=" + skip + "&count=" + count, IngestionEntity[].class);
         IngestionEntity[] ingestionArray = response.getBody();
 
         // If the list is null or the skip is too big, don't continue.
