@@ -64,6 +64,7 @@ public class UserPreferencesService {
     public List<ProviderEntity> getProviderListForUser(int uid, int skip, int count) {
 
         var providerIDListForCurrentUser = upRepository.findAll().stream()
+                .filter(UserPreferencesEntity::isSubscribed)
                 .filter(entry -> entry.getUserID() == uid)
                 .map(UserPreferencesEntity::getProviderID)
                 .collect(Collectors.toSet());
