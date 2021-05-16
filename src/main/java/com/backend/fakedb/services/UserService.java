@@ -13,9 +13,9 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-    @Autowired
     private final UserRepository userRepository;
 
+    @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -45,11 +45,6 @@ public class UserService {
             return true;
         }
         return false;
-    }
-
-    public boolean deleteAllUsers() {
-        userRepository.deleteAll();
-        return true;
     }
 
     @Transactional
