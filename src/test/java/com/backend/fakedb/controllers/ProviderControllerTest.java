@@ -46,37 +46,6 @@ class ProviderControllerTest {
         JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
     }
 
-    @Test
-    void getById() throws Exception {
-        var provider = new ProviderEntity(1, "digi", 90.0, "example.com");
-
-        Mockito.when(providerService.getById(1)).thenReturn(provider);
-
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/provider/getById?id=1")
-                .accept(MediaType.APPLICATION_JSON);
-
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-        Mockito.verify(providerService, Mockito.times(1)).getById(1);
-
-        String expected = "{\"id\":1,\"name\":\"digi\",\"credibility\":90.0, \"avatar\":\"example.com\"}";
-        JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
-    }
-
-    @Test
-    void getByName() throws Exception {
-        var provider = new ProviderEntity(1, "digi", 90.0, "example.com");
-
-        Mockito.when(providerService.getByName("digi")).thenReturn(provider);
-
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/provider/getByName?name=digi")
-                .accept(MediaType.APPLICATION_JSON);
-
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-        Mockito.verify(providerService, Mockito.times(1)).getByName("digi");
-
-        String expected = "{\"id\":1,\"name\":\"digi\",\"credibility\":90.0, \"avatar\":\"example.com\"}";
-        JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
-    }
 
     @Test
     void getInterval() throws Exception {
@@ -110,35 +79,6 @@ class ProviderControllerTest {
 
         String expected = "{\"count\":10}";
         JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
-    }
-
-    @Test
-    void add() throws Exception {
-        String providerJSON = "{\"id\":1,\"name\":\"digi\",\"credibility\":90.0, \"avatar\":\"example.com\"}";
-        var provider = new ProviderEntity(1, "digi", 90.0, "example.com");
-
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/provider/add")
-                .content(providerJSON).contentType(MediaType.APPLICATION_JSON);
-
-        mockMvc.perform(requestBuilder);
-        Mockito.verify(providerService, Mockito.times(1)).addProvider(provider);
-    }
-
-    @Test
-    void update() throws Exception {
-        RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .put("/provider/update?id=1&name=ziarul de iasi&credibility=80.0&avatar=example.com");
-
-        mockMvc.perform(requestBuilder);
-        Mockito.verify(providerService, Mockito.times(1))
-                .updateProvider(1, "ziarul de iasi", 80.0, "example.com");
-    }
-
-    @Test
-    void delete() throws Exception {
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/provider/delete?id=1");
-        mockMvc.perform(requestBuilder);
-        Mockito.verify(providerService, Mockito.times(1)).deleteProvider(1);
     }
 
     @Test

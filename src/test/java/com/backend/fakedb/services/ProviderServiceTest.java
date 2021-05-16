@@ -38,32 +38,6 @@ class ProviderServiceTest {
     }
 
     @Test
-    void add() {
-        providerService.addProvider(new ProviderEntity());
-        Mockito.verify(repository, Mockito.times(1)).save(Mockito.any(ProviderEntity.class));
-    }
-
-    @Test
-    void delete() {
-        providerService.deleteProvider(1);
-        Mockito.verify(repository, Mockito.times(1)).deleteById(1);
-    }
-
-    @Test
-    void update_userDoesNotExist() {
-        Mockito.when(repository.findById(Mockito.anyInt())).thenReturn(Optional.empty());
-        providerService.updateProvider(1, null, null, null);
-        Mockito.verify(repository, Mockito.never()).update(Mockito.anyInt(), Mockito.anyString(), Mockito.anyDouble(), Mockito.anyString());
-    }
-
-    @Test
-    void update() {
-        Mockito.when(repository.findById(Mockito.anyInt())).thenReturn(Optional.of(new ProviderEntity()));
-        providerService.updateProvider(1, "gigi", 90.0, "example.com");
-        Mockito.verify(repository, Mockito.times(1)).update(1, "gigi", 90.0, "example.com");
-    }
-
-    @Test
     void searchCount_emptyList() {
         Mockito.when(repository.findAll()).thenReturn(Collections.emptyList());
         var result = providerService.searchCount("query");
