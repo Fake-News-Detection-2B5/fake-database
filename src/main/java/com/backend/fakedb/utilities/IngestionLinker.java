@@ -129,5 +129,58 @@ public class IngestionLinker {
                                 ingestionEntity.getSourceUrl());
     }
 
+    /**
+     * Public method for getting a list of all the ProviderEntity objects from the posts database.
+     * @return the list
+     */
+    public List<ProviderEntity> provider_getAll() {
+
+        // The response will return all providers from the database
+        ResponseEntity<ProviderEntity[]> response =
+                ingestion.getForEntity("https://fake-news-detection-ingestion.herokuapp.com/v1/api/news/getall", ProviderEntity[].class);
+        ProviderEntity[] providerArray = response.getBody();
+
+        assert providerArray != null;
+        return new ArrayList<ProviderEntity>(Arrays.asList(providerArray));
+    }
+
+    /**
+     * Public method for getting a list of ProviderEntity objects from the posts database.
+     * If the given arguments surpass the amount of rows in the database, null objects will be added to the list.
+     * @param skip the amount of rows to skip (must be a number greater than or equal to zero)
+     * @param count the amount of rows to receive (must be a number greater than zero)
+     * @return the specified list
+     */
+    public List<ProviderEntity> provider_getInterval(int skip, int count) {
+        if (skip < 0 || count < 1) {
+            return null;
+        }
+
+        // The response will return providers from the database, according to the skip and count parameters
+        ResponseEntity<ProviderEntity[]> response =
+                ingestion.getForEntity("https://fake-news-detection-ingestion.herokuapp.com/v1/api/news/getInterval?skip=" + skip + "&count=" + count, ProviderEntity[].class);
+        ProviderEntity[] providerArray = response.getBody();
+
+        // If the list is null or the skip is too big, don't continue.
+        if (providerArray == null || skip >= providerArray.length) {
+            return null;
+        }
+
+        return new ArrayList<ProviderEntity>(Arrays.asList(providerArray));
+    }
+
+    /**
+     * Public method for getting count of all the providers.
+     * @return the count
+     */
+    public IntWrapper provider_getCount() {
+
+        // The response will return all providers from the database
+        ResponseEntity<IntWrapper> response =
+                ingestion.getForEntity("https://fake-news-detection-ingestion.herokuapp.com/v1/api/news/getCount", IntWrapper.class);
+
+        return response.getBody();
+    }
+
 
 }
