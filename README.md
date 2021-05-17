@@ -86,7 +86,14 @@ HTTP requests can be issued to [this](https://fake-database-fe-support.herokuapp
 # Other mentions
 
 ## Requires authentication
-Any method that requires authentication will require the headers `X-Auth-User` and `X-Auth-Token` in order to work. These are the values received upon user login.
+Any method that requires authentication will require the headers `X-Auth-User` and `X-Auth-Token` in order to work. These are the values received upon user login, and have the following format:
+```json
+{
+  "user_id": <your-id-here>,
+  "token": <your-token-here>
+}
+```
+Field `user_id` is of type integer, and field `token` is a string.
 
 ## User POST request body format
 
