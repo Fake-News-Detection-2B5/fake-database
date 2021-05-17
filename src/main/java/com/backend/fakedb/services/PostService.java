@@ -1,7 +1,9 @@
 package com.backend.fakedb.services;
 
 import com.backend.fakedb.entities.PostEntity;
+import com.backend.fakedb.repositories.SessionRepository;
 import com.backend.fakedb.utilities.IngestionLinker;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,8 +12,11 @@ import java.util.List;
 public class PostService {
 
     private IngestionLinker ingestionLinker;
+    private final SessionRepository sessionRepository;
 
-    public PostService() {
+    @Autowired
+    public PostService(SessionRepository sessionRepository) {
+        this.sessionRepository = sessionRepository;
         ingestionLinker = new IngestionLinker();
     }
 
@@ -29,8 +34,11 @@ public class PostService {
      * @param c the number of posts to return (must be a number greater than zero)
      * @return a list of size 'c' of PostEntity objects
      */
-    public List<PostEntity> getInterval(int s, int c) {
-        return ingestionLinker.getInterval(s, c);
+    public List<PostEntity> getInterval(int auth_id, String token, int s, int c) {
+        if (sessionRepository.findAll().stream().anyMatch(session -> session.getUser_id() == auth_id && session.getToken().equals(token))) {
+            return ingestionLinker.getInterval(s, c);
+        }
+        return null;
     }
 
     /**
@@ -41,8 +49,11 @@ public class PostService {
      * @param c the number of posts to return (must be a number greater than zero)
      * @return a list containing the requested elements.
      */
-    public List<PostEntity> getIntervalByProvider(int provider_id, int s, int c) {
-        return ingestionLinker.getIntervalByProvider(provider_id, s, c);
+    public List<PostEntity> getIntervalByProvider(int auth_id, String token, int provider_id, int s, int c) {
+        if (sessionRepository.findAll().stream().anyMatch(session -> session.getUser_id() == auth_id && session.getToken().equals(token))) {
+            return ingestionLinker.getIntervalByProvider(provider_id, s, c);
+        }
+        return null;
     }
 
 }

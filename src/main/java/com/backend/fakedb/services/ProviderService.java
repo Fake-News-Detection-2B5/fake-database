@@ -2,6 +2,7 @@ package com.backend.fakedb.services;
 
 import com.backend.fakedb.entities.ProviderEntity;
 import com.backend.fakedb.repositories.ProviderRepository;
+import com.backend.fakedb.repositories.SessionRepository;
 import com.backend.fakedb.utilities.IntWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,18 +16,23 @@ import java.util.stream.Collectors;
 public class ProviderService {
 
     private final ProviderRepository providerRepository;
+    private final SessionRepository sessionRepository;
 
     @Autowired
-    public ProviderService(ProviderRepository providerRepository) {
+    public ProviderService(ProviderRepository providerRepository, SessionRepository sessionRepository) {
         this.providerRepository = providerRepository;
+        this.sessionRepository = sessionRepository;
     }
 
     /**
      * Public method that returns a List with all available providers.
      * @return a List containing all providers
      */
-    public List<ProviderEntity> getAll() {
-        return providerRepository.findAll();
+    public List<ProviderEntity> getAll(int auth_id, String token) {
+        if (sessionRepository.findAll().stream().anyMatch(session -> session.getUser_id() == auth_id && session.getToken().equals(token))) {
+            return providerRepository.findAll();
+        }
+        return null;
     }
 
     /**
@@ -35,7 +41,13 @@ public class ProviderService {
      * @param c the number of elements in the list (a number over zero)
      * @return a List containing the specified values (if they exists). If the given skip and count numbers overpass the existing rows, null items are added in the list.
      */
-    public List<ProviderEntity> getInterval(int s, int c) {
+    public List<ProviderEntity> getInterval(int auth_id, String token, int s, int c) {
+
+        // User is not authenticated
+        if (sessionRepository.findAll().stream().noneMatch(session -> session.getUser_id() == auth_id && session.getToken().equals(token))) {
+            return null;
+        }
+
         // Cannot skip below zero rows and cannot get a list of negative or zero size.
         if (s < 0 || c < 1) {
             return null;
@@ -51,8 +63,11 @@ public class ProviderService {
      * Public method for getting the amount of providers in the database.
      * @return the amount of providers in the database in a IntWrapper class
      */
-    public IntWrapper getCount() {
-        return new IntWrapper((int) providerRepository.count());
+    public IntWrapper getCount(int auth_id, String token) {
+        if (sessionRepository.findAll().stream().anyMatch(session -> session.getUser_id() == auth_id && session.getToken().equals(token))) {
+            return new IntWrapper((int) providerRepository.count());
+        }
+        return null;
     }
 
     /**
@@ -60,11 +75,14 @@ public class ProviderService {
      * @param query string to be contained in the name of the provider
      * @return an IntWrapper containing the number of providers
      */
-    public IntWrapper searchCount(String query) {
-        int providerNr = (int) providerRepository.findAll().stream()
-                .filter(p -> p.getName().contains(query))
-                .count();
-        return new IntWrapper(providerNr);
+    public IntWrapper searchCount(int auth_id, String token, String query) {
+        if (sessionRepository.findAll().stream().anyMatch(session -> session.getUser_id() == auth_id && session.getToken().equals(token))) {
+            int providerNr = (int) providerRepository.findAll().stream()
+                    .filter(p -> p.getName().contains(query))
+                    .count();
+            return new IntWrapper(providerNr);
+        }
+        return null;
     }
 
     /**
@@ -75,7 +93,10 @@ public class ProviderService {
      * @param c the amount of providers to be returned (a number greater that zero)
      * @return a list with the objects requested
      */
-    public List<ProviderEntity> search(String query, int s, int c) {
+    public List<ProviderEntity> search(int auth_id, String token, String query, int s, int c) {
+        if (sessionRepository.findAll().stream().noneMatch(session -> session.getUser_id() == auth_id && session.getToken().equals(token))) {
+            return null;
+        }
         if (s < 0 || c < 1) {
             return null;
         }

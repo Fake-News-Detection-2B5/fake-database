@@ -4,6 +4,7 @@ import com.backend.fakedb.entities.ProviderEntity;
 import com.backend.fakedb.entities.UserPreferencesEntity;
 import com.backend.fakedb.entities.UserPreferencesPK;
 import com.backend.fakedb.repositories.ProviderRepository;
+import com.backend.fakedb.repositories.SessionRepository;
 import com.backend.fakedb.repositories.UserPreferencesRepository;
 import com.backend.fakedb.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,26 +16,29 @@ import java.util.stream.Collectors;
 @Service
 public class UserPreferencesService {
 
-    @Autowired
     private final UserPreferencesRepository upRepository;
-
-    @Autowired
     private final UserRepository userRepository;
+    private final ProviderRepository providerRepository;
+    private final SessionRepository sessionRepository;
 
     @Autowired
-    private final ProviderRepository providerRepository;
-
-    public UserPreferencesService(UserPreferencesRepository upRepository, UserRepository userRepository, ProviderRepository providerRepository) {
+    public UserPreferencesService(
+            UserPreferencesRepository upRepository, UserRepository userRepository,
+            ProviderRepository providerRepository, SessionRepository sessionRepository) {
         this.upRepository = upRepository;
         this.userRepository = userRepository;
         this.providerRepository = providerRepository;
+        this.sessionRepository = sessionRepository;
     }
 
     public List<UserPreferencesEntity> getPreferences() {
         return upRepository.findAll();
     }
 
-    public boolean subscribeUserToProviders(int uid, List<Integer> providerIDs) {
+    public boolean subscribeUserToProviders(int auth_id, String token, int uid, List<Integer> providerIDs) {
+        if (sessionRepository.findAll().stream().noneMatch(session -> session.getUser_id() == auth_id && session.getToken().equals(token))) {
+            return false;
+        }
 
         for (var prov_id : providerIDs) {
             var user = userRepository.findById(uid);
@@ -47,7 +51,11 @@ public class UserPreferencesService {
         return true;
     }
 
-    public boolean isSubscribed(int uid, int prov_id) {
+    public boolean isSubscribed(int auth_id, String token, int uid, int prov_id) {
+        if (sessionRepository.findAll().stream().noneMatch(session -> session.getUser_id() == auth_id && session.getToken().equals(token))) {
+            return false;
+        }
+
         var user = userRepository.findById(uid);
         var provider = providerRepository.findById(prov_id);
         if (user.isEmpty() || provider.isEmpty()) {
@@ -61,7 +69,10 @@ public class UserPreferencesService {
         return result.get().isSubscribed();
     }
 
-    public List<ProviderEntity> getProviderListForUser(int uid, int skip, int count) {
+    public List<ProviderEntity> getProviderListForUser(int auth_id, String token, int uid, int skip, int count) {
+        if (sessionRepository.findAll().stream().noneMatch(session -> session.getUser_id() == auth_id && session.getToken().equals(token))) {
+            return null;
+        }
 
         var providerIDListForCurrentUser = upRepository.findAll().stream()
                 .filter(UserPreferencesEntity::isSubscribed)
@@ -76,7 +87,11 @@ public class UserPreferencesService {
                 .collect(Collectors.toList());
     }
 
-    public boolean updateSubscriptionStatus(int uid, int prov_id, boolean status) {
+    public boolean updateSubscriptionStatus(int auth_id, String token, int uid, int prov_id, boolean status) {
+        if (sessionRepository.findAll().stream().noneMatch(session -> session.getUser_id() == auth_id && session.getToken().equals(token))) {
+            return false;
+        }
+
         var user = userRepository.findById(uid);
         var provider = providerRepository.findById(prov_id);
         if (user.isEmpty() || provider.isEmpty()) {

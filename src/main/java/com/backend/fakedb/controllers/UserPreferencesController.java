@@ -26,27 +26,47 @@ public class UserPreferencesController {
     }
 
     @PostMapping("/subscribeUserToProviders")
-    public boolean subscribeUserToProviders(@RequestParam(name = "uid", required = true) int uid, @RequestBody List<Integer> providerIDs) {
-        return upService.subscribeUserToProviders(uid, providerIDs);
+    public boolean subscribeUserToProviders(
+            @RequestHeader(name = "X-Auth-User") Integer auth_id,
+            @RequestHeader(name = "X-Auth-Token") String token,
+            @RequestParam(name = "uid", required = true) int uid,
+            @RequestBody List<Integer> providerIDs) {
+        if (auth_id == uid) {
+            return upService.subscribeUserToProviders(auth_id, token, uid, providerIDs);
+        }
+        return false;
     }
 
     @GetMapping("/isSubscribed")
-    public boolean isSubscribed(@RequestParam(name = "uid", required = true) int uid, @RequestParam(name = "prov_id", required = true) int prov_id) {
-        return upService.isSubscribed(uid, prov_id);
+    public boolean isSubscribed(
+            @RequestHeader(name = "X-Auth-User") Integer auth_id,
+            @RequestHeader(name = "X-Auth-Token") String token,
+            @RequestParam(name = "uid", required = true) int uid,
+            @RequestParam(name = "prov_id", required = true) int prov_id) {
+        return upService.isSubscribed(auth_id, token, uid, prov_id);
     }
 
     @GetMapping("/getByUserId")
-    public List<ProviderEntity> getProviderListForUser(@RequestParam(name = "uid", required = true) int uid,
-                                                       @RequestParam(name = "skip", required = false, defaultValue = "0") int skip,
-                                                       @RequestParam(name = "count", required = false, defaultValue = "100") int count) {
-        return upService.getProviderListForUser(uid, skip, count);
+    public List<ProviderEntity> getProviderListForUser(
+            @RequestHeader(name = "X-Auth-User") Integer auth_id,
+            @RequestHeader(name = "X-Auth-Token") String token,
+            @RequestParam(name = "uid", required = true) int uid,
+            @RequestParam(name = "skip", required = false, defaultValue = "0") int skip,
+            @RequestParam(name = "count", required = false, defaultValue = "100") int count) {
+        return upService.getProviderListForUser(auth_id, token, uid, skip, count);
     }
 
     @PutMapping("/updateSubscriptionStatus")
-    public void updateSubscriptionStatus(@RequestParam(name = "uid", required = true) int uid,
-                                            @RequestParam(name = "prov_id", required = true) int prov_id,
-                                            @RequestParam(name = "status", required = true) boolean status) {
-        upService.updateSubscriptionStatus(uid, prov_id, status);
+    public boolean updateSubscriptionStatus(
+            @RequestHeader(name = "X-Auth-User") Integer auth_id,
+            @RequestHeader(name = "X-Auth-Token") String token,
+            @RequestParam(name = "uid", required = true) int uid,
+            @RequestParam(name = "prov_id", required = true) int prov_id,
+            @RequestParam(name = "status", required = true) boolean status) {
+        if (auth_id.equals(uid)) {
+            return upService.updateSubscriptionStatus(auth_id, token, uid, prov_id, status);
+        }
+        return false;
     }
 }
 

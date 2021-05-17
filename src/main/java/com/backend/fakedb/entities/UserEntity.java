@@ -15,9 +15,8 @@ public class UserEntity {
     // The username of this user
     String username;
 
-    /* A hash for the associated password
-    * String passwordHash;
-    * */
+    // A hash for the associated password
+    String passwordHash;
 
     // A URL to the user's avatar picture.
     String avatarUrl;
@@ -31,9 +30,10 @@ public class UserEntity {
     public UserEntity() {
     }
 
-    public UserEntity(Integer id, String username, String avatarUrl, String bio, String email) {
+    public UserEntity(Integer id, String username, String passwordHash, String avatarUrl, String bio, String email) {
         this.id = id;
         this.username = username;
+        this.passwordHash = passwordHash;
         this.avatarUrl = avatarUrl;
         this.bio = bio;
         this.email = email;
@@ -79,15 +79,12 @@ public class UserEntity {
         this.email = email;
     }
 
-    @Override
-    public String toString() {
-        return "UserEntity{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", avatarUrl='" + avatarUrl + '\'' +
-                ", bio='" + bio + '\'' +
-                ", email='" + email + '\'' +
-                '}';
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 
     @Override
@@ -99,6 +96,7 @@ public class UserEntity {
 
         if (!id.equals(that.id)) return false;
         if (!username.equals(that.username)) return false;
+        if (!passwordHash.equals(that.passwordHash)) return false;
         if (!avatarUrl.equals(that.avatarUrl)) return false;
         if (!bio.equals(that.bio)) return false;
         return email.equals(that.email);
@@ -108,9 +106,22 @@ public class UserEntity {
     public int hashCode() {
         int result = id.hashCode();
         result = 31 * result + username.hashCode();
+        result = 31 * result + passwordHash.hashCode();
         result = 31 * result + avatarUrl.hashCode();
         result = 31 * result + bio.hashCode();
         result = 31 * result + email.hashCode();
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "UserEntity{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", passwordHash='" + passwordHash + '\'' +
+                ", avatarUrl='" + avatarUrl + '\'' +
+                ", bio='" + bio + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }

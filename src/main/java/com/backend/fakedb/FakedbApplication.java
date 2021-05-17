@@ -1,7 +1,5 @@
 package com.backend.fakedb;
 
-import com.backend.fakedb.controllers.PostController;
-import com.backend.fakedb.utilities.IngestionLinker;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;

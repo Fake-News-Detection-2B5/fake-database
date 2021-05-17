@@ -25,8 +25,10 @@ public class ProviderController {
      * @return a List with every ProviderEntity from the database
      */
     @GetMapping(path = "/getAll")
-    public List<ProviderEntity> getProviders() {
-        return providerService.getAll();
+    public List<ProviderEntity> getProviders(
+            @RequestHeader(name = "X-Auth-User") Integer auth_id,
+            @RequestHeader(name = "X-Auth-Token") String token) {
+        return providerService.getAll(auth_id, token);
     }
 
     /**
@@ -36,8 +38,12 @@ public class ProviderController {
      * @return a List with the ProviderEntity requested
      */
     @GetMapping(path = "/getInterval")
-    public List<ProviderEntity> getInterval(@RequestParam(name = "skip", required = true) int s, @RequestParam(name = "count", required = true) int c) {
-        return providerService.getInterval(s, c);
+    public List<ProviderEntity> getInterval(
+            @RequestHeader(name = "X-Auth-User") Integer auth_id,
+            @RequestHeader(name = "X-Auth-Token") String token,
+            @RequestParam(name = "skip", required = true) int s,
+            @RequestParam(name = "count", required = true) int c) {
+        return providerService.getInterval(auth_id, token, s, c);
     }
 
     /**
@@ -45,8 +51,10 @@ public class ProviderController {
      * @return the number of providers as a IntWrapper class
      */
     @GetMapping(path = "/getCount")
-    public IntWrapper getCount() {
-        return providerService.getCount();
+    public IntWrapper getCount(
+            @RequestHeader(name = "X-Auth-User") Integer auth_id,
+            @RequestHeader(name = "X-Auth-Token") String token) {
+        return providerService.getCount(auth_id, token);
     }
 
     /**
@@ -55,8 +63,11 @@ public class ProviderController {
      * @return an IntWrapper containing the number of providers
      */
     @GetMapping(path = "/searchCount")
-    public IntWrapper searchCount(@RequestParam(name = "query", required = true) String query) {
-        return providerService.searchCount(query);
+    public IntWrapper searchCount(
+            @RequestHeader(name = "X-Auth-User") Integer auth_id,
+            @RequestHeader(name = "X-Auth-Token") String token,
+            @RequestParam(name = "query", required = true) String query) {
+        return providerService.searchCount(auth_id, token, query);
     }
 
     /**
@@ -67,7 +78,12 @@ public class ProviderController {
      * @return a List with the ProviderEntity requested
      */
     @GetMapping(path = "/search")
-    public List<ProviderEntity> search(@RequestParam(name = "query", required = true) String query, @RequestParam(name = "skip", required = true) int s, @RequestParam(name = "count", required = true) int c) {
-        return providerService.search(query, s, c);
+    public List<ProviderEntity> search(
+            @RequestHeader(name = "X-Auth-User") Integer auth_id,
+            @RequestHeader(name = "X-Auth-Token") String token,
+            @RequestParam(name = "query", required = true) String query,
+            @RequestParam(name = "skip", required = true) int s,
+            @RequestParam(name = "count", required = true) int c) {
+        return providerService.search(auth_id, token, query, s, c);
     }
 }
