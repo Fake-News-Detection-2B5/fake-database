@@ -182,5 +182,38 @@ public class IngestionLinker {
         return response.getBody();
     }
 
+    /**
+     * public method for getting the count for providers matching the query
+     * @return  the count
+     * */
+
+    public IntWrapper provider_searchCount(String queryToBeContained){
+        ResponseEntity<IntWrapper> response =
+                ingestion.getForEntity("https://fake-news-detection-ingestion.herokuapp.com/v1/api/news/searchCount?query=" + queryToBeContained, IntWrapper.class);
+        return response.getBody();
+    }
+
+    /**
+     * Public method for getting a list of ProviderEntity objects from the posts database by specified filters.
+     * If the given arguments surpass the amount of rows in the database, null objects will be added to the list.
+     * @param query filters for the searching of providers
+     * @param skip the amount of rows to skip (must be a number greater than or equal to zero)
+     * @param count the amount of rows to receive (must be a number greater than zero)
+     * @return the specified list
+     */
+
+    public List<ProviderEntity> provider_search(String query, int skip, int count){
+        if (skip < 0 || count < 1) {
+            return null;
+        }
+
+        ResponseEntity<ProviderEntity[]> response =
+                ingestion.getForEntity("https://fake-news-detection-ingestion.herokuapp.com/v1/api/news/search?query="+ query + "&skip=" + skip + "&count=" + count, ProviderEntity[].class);
+        ProviderEntity[] providerArray = response.getBody();
+
+        assert providerArray != null;
+        return new ArrayList<ProviderEntity>(Arrays.asList(providerArray));
+    }
+
 
 }
