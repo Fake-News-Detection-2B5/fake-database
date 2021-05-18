@@ -31,10 +31,22 @@ public class UserPreferencesService {
         this.sessionRepository = sessionRepository;
     }
 
+    /**
+     * public method for getting all the user's preferences
+     * @return a list of UserPreferencesEntities
+     */
     public List<UserPreferencesEntity> getPreferences() {
         return upRepository.findAll();
     }
 
+    /**
+     * public method that subscribes a specified user to a list of providers
+     * @param auth_id user's authentification id
+     * @param token user's authentification token
+     * @param uid user's id
+     * @param providerIDs list of provider's ids
+     * @return true, if the process has been successful and false, otherwise
+     */
     public boolean subscribeUserToProviders(int auth_id, String token, int uid, List<Integer> providerIDs) {
         if (sessionRepository.findAll().stream().noneMatch(session -> session.getUser_id() == auth_id && session.getToken().equals(token))) {
             return false;
@@ -51,6 +63,14 @@ public class UserPreferencesService {
         return true;
     }
 
+    /**
+     * public method for checking if a specified user is subscribed to a specified provider
+     * @param auth_id user's authentification id
+     * @param token user's authentification token
+     * @param uid user's id
+     * @param prov_id provider's id
+     * @return true, if the user is subscribed to the specified provider and false, otherwise
+     */
     public boolean isSubscribed(int auth_id, String token, int uid, int prov_id) {
         if (sessionRepository.findAll().stream().noneMatch(session -> session.getUser_id() == auth_id && session.getToken().equals(token))) {
             return false;
@@ -69,6 +89,15 @@ public class UserPreferencesService {
         return result.get().isSubscribed();
     }
 
+    /**
+     * public method for getting the providers a specified user is subscribed to
+     * @param auth_id user's authentification id
+     * @param token user's authentification token
+     * @param uid user's id
+     * @param skip skip a specified number of entries
+     * @param count the specified number of entries the method returns
+     * @return a list of ProviderEntities (the providers the user is subscribed to)
+     */
     public List<ProviderEntity> getProviderListForUser(int auth_id, String token, int uid, int skip, int count) {
         if (sessionRepository.findAll().stream().noneMatch(session -> session.getUser_id() == auth_id && session.getToken().equals(token))) {
             return null;
@@ -87,6 +116,15 @@ public class UserPreferencesService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * public method that updates the subscription status of a specified user for a specified provider
+     * @param auth_id user's authentification id
+     * @param token user's authentification token
+     * @param uid user's id
+     * @param prov_id provider's id
+     * @param status subscription status (true, if the user wants to be subscribed and false, otherwise)
+     * @return true, if the process was successful and false, otherwise
+     */
     public boolean updateSubscriptionStatus(int auth_id, String token, int uid, int prov_id, boolean status) {
         if (sessionRepository.findAll().stream().noneMatch(session -> session.getUser_id() == auth_id && session.getToken().equals(token))) {
             return false;

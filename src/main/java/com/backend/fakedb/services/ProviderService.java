@@ -26,6 +26,8 @@ public class ProviderService {
 
     /**
      * Public method that returns a List with all available providers.
+     * @param auth_id user's authentification id
+     * @param token user's authentification token
      * @return a List containing all providers
      */
     public List<ProviderEntity> getAll(int auth_id, String token) {
@@ -37,6 +39,8 @@ public class ProviderService {
 
     /**
      * Public method that returns a List of ProviderEntity objects of size 'c' and skipping 's' rows.
+     * @param auth_id user's authentification id
+     * @param token user's authentification token
      * @param s the amount of rows to skip (a number over or equal to zero)
      * @param c the number of elements in the list (a number over zero)
      * @return a List containing the specified values (if they exists). If the given skip and count numbers overpass the existing rows, null items are added in the list.
@@ -61,6 +65,8 @@ public class ProviderService {
 
     /**
      * Public method for getting the amount of providers in the database.
+     * @param auth_id user's authentification id
+     * @param token user's authentification token
      * @return the amount of providers in the database in a IntWrapper class
      */
     public IntWrapper getCount(int auth_id, String token) {
@@ -72,6 +78,8 @@ public class ProviderService {
 
     /**
      * Public method for getting the amount of providers in the database that contain the given string.
+     * @param auth_id user's authentification id
+     * @param token user's authentification token
      * @param query string to be contained in the name of the provider
      * @return an IntWrapper containing the number of providers
      */
@@ -88,6 +96,8 @@ public class ProviderService {
     /**
      * Public method for getting the amount of providers in the database that contain the given string.
      * If the given skip and count parameters exceed the database limit, null objects will be added to the list.
+     * @param auth_id user's authentification id
+     * @param token user's authentification token
      * @param query string that needs to be contained by the provider's name
      * @param s the amount of providers to be skipped (a number greater than or equal to zero)
      * @param c the amount of providers to be returned (a number greater that zero)

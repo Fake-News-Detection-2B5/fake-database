@@ -31,6 +31,8 @@ public class PostService {
      * Public method for getting a list of posts from the ingestion system.
      * If the given parameters exceed the database number of existing rows, null objects will be added to the list.
      * @param s the amount of rows to skip (must be a number equal or greater than zero)
+     * @param auth_id user's authentification id
+     * @param token user's authentification token
      * @param c the number of posts to return (must be a number greater than zero)
      * @return a list of size 'c' of PostEntity objects
      */
@@ -44,6 +46,8 @@ public class PostService {
     /**
      * Public method which returns a list of post from a specific provider.
      * If the given parameters exceed the database number of existing rows, null objects will be added to the list.
+     * @param auth_id user's authentification id
+     * @param token user's authentification token
      * @param provider_id the provider from which to get the posts
      * @param s the amount of rows to skip (must be a number equal or greater than zero)
      * @param c the number of posts to return (must be a number greater than zero)
