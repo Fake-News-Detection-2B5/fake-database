@@ -3,10 +3,10 @@ package com.backend.fakedb.services;
 import com.backend.fakedb.entities.ProviderEntity;
 import com.backend.fakedb.repositories.ProviderRepository;
 import com.backend.fakedb.repositories.SessionRepository;
+import com.backend.fakedb.utilities.IngestionLinker;
 import com.backend.fakedb.utilities.IntWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +17,7 @@ public class ProviderService {
 
     private final ProviderRepository providerRepository;
     private final SessionRepository sessionRepository;
+    private final IngestionLinker ingestionLinker = new IngestionLinker();
 
     @Autowired
     public ProviderService(ProviderRepository providerRepository, SessionRepository sessionRepository) {
@@ -31,8 +32,9 @@ public class ProviderService {
      * @return a List containing all providers
      */
     public List<ProviderEntity> getAll(int auth_id, String token) {
+
         if (sessionRepository.findAll().stream().anyMatch(session -> session.getUser_id() == auth_id && session.getToken().equals(token))) {
-            return providerRepository.findAll();
+            return ingestionLinker.provider_getAll();
         }
         return null;
     }
@@ -52,15 +54,7 @@ public class ProviderService {
             return null;
         }
 
-        // Cannot skip below zero rows and cannot get a list of negative or zero size.
-        if (s < 0 || c < 1) {
-            return null;
-        }
-
-        return providerRepository.findAll().stream()
-                .skip(s)
-                .limit(c)
-                .collect(Collectors.toList());
+        return ingestionLinker.provider_getInterval(s, c);
     }
 
     /**
@@ -71,7 +65,7 @@ public class ProviderService {
      */
     public IntWrapper getCount(int auth_id, String token) {
         if (sessionRepository.findAll().stream().anyMatch(session -> session.getUser_id() == auth_id && session.getToken().equals(token))) {
-            return new IntWrapper((int) providerRepository.count());
+            return ingestionLinker.provider_getCount();
         }
         return null;
     }
@@ -85,10 +79,7 @@ public class ProviderService {
      */
     public IntWrapper searchCount(int auth_id, String token, String query) {
         if (sessionRepository.findAll().stream().anyMatch(session -> session.getUser_id() == auth_id && session.getToken().equals(token))) {
-            int providerNr = (int) providerRepository.findAll().stream()
-                    .filter(p -> p.getName().contains(query))
-                    .count();
-            return new IntWrapper(providerNr);
+            return ingestionLinker.provider_searchCount(query);
         }
         return null;
     }
@@ -107,20 +98,15 @@ public class ProviderService {
         if (sessionRepository.findAll().stream().noneMatch(session -> session.getUser_id() == auth_id && session.getToken().equals(token))) {
             return null;
         }
-        if (s < 0 || c < 1) {
-            return null;
-        }
-        return providerRepository.findAll().stream()
-                .filter(str -> str.getName().contains(query))
-                .skip(s)
-                .limit(c)
-                .collect(Collectors.toList());
+        return ingestionLinker.provider_search(query, s, c);
     }
 
     public Optional<ProviderEntity> getById(Integer auth_id, String token, int prov_id) {
         if (sessionRepository.findAll().stream().noneMatch(session -> session.getUser_id() == auth_id && session.getToken().equals(token))) {
             return Optional.empty();
         }
-        return providerRepository.findById(prov_id);
+        return getAll(auth_id, token).stream()
+                .filter(a -> a.getId() == prov_id)
+                .findFirst();
     }
 }
