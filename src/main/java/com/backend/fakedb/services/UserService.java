@@ -86,12 +86,14 @@ public class UserService {
             var maybeSession = sessionRepository.findAll().stream()
                     .filter(s -> s.getUser_id() == user.getId())
                     .findFirst();
-            if (maybeSession.isEmpty()) {
+            if (maybeSession.isPresent()) {
+                return Optional.of(new LoginResponseWrapper(user.getId(), maybeSession.get().getToken()));
+            } else {
                 String token = RandomStringUtils.randomAlphanumeric(64);
                 var newSession = new SessionEntity((int) (sessionRepository.count() + 1), user.getId(), token);
                 sessionRepository.save(newSession);
+                return Optional.of(new LoginResponseWrapper(user.getId(), token));
             }
-            return Optional.of(new LoginResponseWrapper(user.getId(), maybeSession.get().getToken()));
         }
         return Optional.empty();
     }
