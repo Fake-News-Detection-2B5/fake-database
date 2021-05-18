@@ -28,11 +28,19 @@ public class UserService {
     }
 
     public List<UserEntity> getUsers() {
-        return userRepository.findAll();
+        var users = userRepository.findAll();
+        users.forEach(u -> u.setPasswordHash(""));
+        return users;
     }
 
     public Optional<UserEntity> getUserById(Integer id) {
-        return userRepository.findById(id);
+        var maybeUser = userRepository.findById(id);
+        if (maybeUser.isPresent()) {
+            var user = maybeUser.get();
+            user.setPasswordHash("");
+            return Optional.of(user);
+        }
+        return Optional.empty();
     }
 
     public boolean registerUser(UserEntity user) {
