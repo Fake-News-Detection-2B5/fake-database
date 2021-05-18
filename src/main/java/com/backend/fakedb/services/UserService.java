@@ -27,12 +27,21 @@ public class UserService {
         this.sessionRepository = sessionRepository;
     }
 
+    /**
+     * public method for getting all the users in the database
+     * @return a list of UserEntities (all the users in the database)
+     */
     public List<UserEntity> getUsers() {
         var users = userRepository.findAll();
         users.forEach(u -> u.setPasswordHash(""));
         return users;
     }
 
+    /**
+     * public method for finding a user by a specified id
+     * @param id the id of the user we're trying to find
+     * @return a UserEntity (the user whose id the specified one belongs to)
+     */
     public Optional<UserEntity> getUserById(Integer id) {
         var maybeUser = userRepository.findById(id);
         if (maybeUser.isPresent()) {
@@ -43,6 +52,11 @@ public class UserService {
         return Optional.empty();
     }
 
+    /**
+     * publc method for registering a user in the database
+     * @param user the user we want to register
+     * @return true, if the process has been successful and false, otherwise
+     */
     public boolean registerUser(UserEntity user) {
         var maybeUser = userRepository.findAll().stream()
                 .filter(u -> u.getUsername().equals(user.getUsername()))
@@ -56,6 +70,11 @@ public class UserService {
         return false;
     }
 
+    /**
+     * public method for deleting a specified user from the database
+     * @param id the id that belongs to the user we want to delete
+     * @return true, if the process has been successful and false, otherwise
+     */
     public boolean deleteUser(Integer id) {
         if (userRepository.findById(id).isPresent()) {
             userRepository.deleteById(id);
@@ -64,6 +83,16 @@ public class UserService {
         return false;
     }
 
+    /**
+     * public method for changing the password, avatar and/or bio of a specified user
+     * @param auth_id user's authentification id
+     * @param token user's authentification token
+     * @param id user's id
+     * @param password user's new password
+     * @param avatar user's new avatar
+     * @param bio user's new bio
+     * @return true, if the process has been successful and false, otherwise
+     */
     @Transactional
     public boolean updateUser(Integer auth_id, String token, Integer id, String password, String avatar, String bio) {
         var maybeUser = userRepository.findById(id);
@@ -79,6 +108,12 @@ public class UserService {
         return false;
     }
 
+    /**
+     * public method that logs a specified user in the system
+     * @param username user's username
+     * @param password user's password
+     * @return LoginResponseWrapper containing the user's id and the authentification token
+     */
     public Optional<LoginResponseWrapper> loginUser(String username, String password) {
         var maybeUser = userRepository.findAll().stream()
                 .filter(u -> u.getUsername().equals(username))
@@ -106,6 +141,11 @@ public class UserService {
         return Optional.empty();
     }
 
+    /**
+     * public method that logs a specified user out 
+     * @param auth_id user's authentification id 
+     * @param token user's authentification token 
+     */
     public void logout(Integer auth_id, String token) {
         var maybeSession = sessionRepository.findAll().stream()
                 .filter(s -> s.getUser_id() == auth_id && s.getToken().equals(token))
