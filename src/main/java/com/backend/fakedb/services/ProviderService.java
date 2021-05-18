@@ -116,4 +116,11 @@ public class ProviderService {
                 .limit(c)
                 .collect(Collectors.toList());
     }
+
+    public Optional<ProviderEntity> getById(Integer auth_id, String token, int prov_id) {
+        if (sessionRepository.findAll().stream().noneMatch(session -> session.getUser_id() == auth_id && session.getToken().equals(token))) {
+            return Optional.empty();
+        }
+        return providerRepository.findById(prov_id);
+    }
 }

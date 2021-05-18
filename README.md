@@ -9,6 +9,8 @@ HTTP requests can be issued to [this](https://fake-database-fe-support.herokuapp
 <li><dl> <strong>GET</strong> requests
     <dt><em>/getAll</em></dt>
     <dd>Returns a list containing all available providers. Requires authentication.</dd>
+    <dt><em>/getById?provider_id={provider_id}</em></dt>
+    <dd>Returns a provider specified by id. Requires authentication.</dd>
     <dt><em>/getInterval?skip={skip}&count={count}</em></dt>
     <dd>Given a skip and count values, it returns a list of COUNT elements skipping SKIP rows from the database.  Requires authentication.</dd>
     <dt><em>/getCount</em></dt>
@@ -59,6 +61,7 @@ HTTP requests can be issued to [this](https://fake-database-fe-support.herokuapp
     <dt><em>/getIntervalByProvider?provider_id={provider_id}&skip={skip}&count={count}</em></dt>
     <dd>Skips the first <strong>SKIP</strong> posts and returns the next <strong>COUNT</strong> posts from the provider with <strong>PROVIDER_ID</strong>. Requires authentication.</dd>
 </dl></li>
+</ul>
 
 ## User preferences (prefix: <strong>/preferences</strong>)
 

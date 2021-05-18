@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -19,6 +20,15 @@ public class ProviderController {
     public ProviderController(ProviderService providerService) {
         this.providerService = providerService;
     }
+
+    @GetMapping(path = "/getById")
+    public Optional<ProviderEntity> getById(
+            @RequestHeader(name = "X-Auth-User") Integer auth_id,
+            @RequestHeader(name = "X-Auth-Token") String token,
+            @RequestParam(name = "provider_id", required = true) int prov_id) {
+        return providerService.getById(auth_id, token, prov_id);
+    }
+
 
     /**
      * Public method for requesting all providers from the database
