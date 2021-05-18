@@ -38,13 +38,9 @@ public class UserController {
 
     @PostMapping("/login")
     public Optional<LoginResponseWrapper> loginUser(
-            @RequestParam(name = "username", required = true) Integer id,
+            @RequestParam(name = "username", required = true) String username,
             @RequestParam(name = "password", required = true) String password) {
-        var maybeToken = userService.loginUser(id, password);
-        if (maybeToken.isPresent()) {
-            return Optional.of(new LoginResponseWrapper(id, maybeToken.get()));
-        }
-        return Optional.empty();
+        return userService.loginUser(username, password);
     }
 
     @DeleteMapping("/delete")

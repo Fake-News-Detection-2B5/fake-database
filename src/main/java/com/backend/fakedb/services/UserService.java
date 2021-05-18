@@ -4,6 +4,7 @@ import com.backend.fakedb.entities.SessionEntity;
 import com.backend.fakedb.entities.UserEntity;
 import com.backend.fakedb.repositories.SessionRepository;
 import com.backend.fakedb.repositories.UserRepository;
+import com.backend.fakedb.utilities.LoginResponseWrapper;
 import org.apache.catalina.User;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.RandomStringUtils;
@@ -70,25 +71,27 @@ public class UserService {
         return false;
     }
 
-    public Optional<String> loginUser(Integer id, String password) {
-        var maybeUser = userRepository.findById(id);
+    public Optional<LoginResponseWrapper> loginUser(String username, String password) {
+        var maybeUser = userRepository.findAll().stream()
+                .filter(u -> u.getUsername().equals(username))
+                .findFirst();
+
         if (maybeUser.isPresent()) {
+            var user = maybeUser.get();
             String hash = DigestUtils.sha256Hex(password);
-            if (!hash.equals(maybeUser.get().getPasswordHash())) {
+            if (!hash.equals(user.getPasswordHash())) {
                 return Optional.empty();
             }
 
             var maybeSession = sessionRepository.findAll().stream()
-                    .filter(s -> s.getUser_id() == id)
+                    .filter(s -> s.getUser_id() == user.getId())
                     .findFirst();
-            if (maybeSession.isPresent()) {
-                return Optional.of(maybeSession.get().getToken());
-            } else {
+            if (maybeSession.isEmpty()) {
                 String token = RandomStringUtils.randomAlphanumeric(64);
-                var newSession = new SessionEntity((int) (sessionRepository.count() + 1), id, token);
+                var newSession = new SessionEntity((int) (sessionRepository.count() + 1), user.getId(), token);
                 sessionRepository.save(newSession);
-                return Optional.of(token);
             }
+            return Optional.of(new LoginResponseWrapper(user.getId(), maybeSession.get().getToken()));
         }
         return Optional.empty();
     }
