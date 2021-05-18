@@ -98,7 +98,7 @@ public class UserService {
         var maybeUser = userRepository.findById(id);
         if (maybeUser.isPresent()) {
             if (sessionRepository.findAll().stream().anyMatch(s -> s.getUser_id() == auth_id && s.getToken().equals(token))) {
-                String newPass = password.equals("") ? maybeUser.get().getPasswordHash() : password;
+                String newPass = password.equals("") ? maybeUser.get().getPasswordHash() : DigestUtils.sha256Hex(password);
                 String newAvatar = avatar.equals("") ? maybeUser.get().getAvatarUrl() : avatar;
                 String newBio = bio.equals("") ? maybeUser.get().getBio() : bio;
                 userRepository.update(id, newPass, newAvatar, newBio);
