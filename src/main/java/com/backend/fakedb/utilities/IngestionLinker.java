@@ -43,22 +43,12 @@ public class IngestionLinker {
                 ingestion.getForEntity("https://fake-news-detection-ingestion.herokuapp.com/v1/api/news/getInterval?skip=" + skip + "&count=" + count, IngestionEntity[].class);
         IngestionEntity[] ingestionArray = response.getBody();
 
-        // If the list is null or the skip is too big, don't continue.
-        if (ingestionArray == null || skip >= ingestionArray.length) {
+        // If the list is null, don't continue.
+        if (ingestionArray == null) {
             return null;
         }
 
-        List<PostEntity> responseList = new ArrayList<>(ingestionArray.length);
-
-        for (int i = 0; i < ingestionArray.length; i++) {
-            // We need to sent an AiEntity to the AI module and get the associated result
-            ScoreResult responseScore = ingestion.postForObject("https://ai-communication-module.herokuapp.com/ai-module/", convertToAiEntity(ingestionArray[i]), ScoreResult.class);
-
-            // We need to build a PostEntity with the associated score and information
-            assert responseScore != null;
-            responseList.add(i, convertToPostEntity(ingestionArray[i], responseScore.getScore()));
-        }
-        return responseList;
+        return getPostEntities(ingestionArray);
     }
 
     /**
@@ -79,22 +69,12 @@ public class IngestionLinker {
                 ingestion.getForEntity("https://fake-news-detection-ingestion.herokuapp.com/v1/api/news/getIntervalByProvider?provider_id=" + providerId + "&skip=" + skip + "&count=" + count, IngestionEntity[].class);
         IngestionEntity[] ingestionArray = response.getBody();
 
-        // If the list is null or the skip is too big, don't continue.
-        if (ingestionArray == null || skip >= ingestionArray.length) {
+        // If the list is null, don't continue.
+        if (ingestionArray == null) {
             return null;
         }
 
-        List<PostEntity> responseList = new ArrayList<>(ingestionArray.length);
-
-        for (int i = 0; i < ingestionArray.length; i++) {
-            // We need to sent an AiEntity to the AI module and get the associated result
-            ScoreResult responseScore = ingestion.postForObject("https://ai-communication-module.herokuapp.com/ai-module/", convertToAiEntity(ingestionArray[i]), ScoreResult.class);
-
-            // We need to build a PostEntity with the associated score and information
-            assert responseScore != null;
-            responseList.add(i, convertToPostEntity(ingestionArray[i], responseScore.getScore()));
-        }
-        return responseList;
+        return getPostEntities(ingestionArray);
     }
 
     /**
@@ -109,7 +89,7 @@ public class IngestionLinker {
         ProviderEntity[] providerArray = response.getBody();
 
         assert providerArray != null;
-        return new ArrayList<ProviderEntity>(Arrays.asList(providerArray));
+        return new ArrayList<>(Arrays.asList(providerArray));
     }
 
     /**
@@ -129,21 +109,12 @@ public class IngestionLinker {
                 ingestion.getForEntity("https://fake-news-detection-ingestion.herokuapp.com/v1/api/news/providers/getInterval?skip=" + skip + "&count=" + count, ProviderEntity[].class);
         ProviderEntity[] providerArray = response.getBody();
 
-        // If the list is null or the skip is too big, don't continue.
-        if (providerArray == null || skip >= providerArray.length) {
+        // If the list is null, don't continue.
+        if (providerArray == null) {
             return null;
         }
 
-        List<ProviderEntity> returnList = new ArrayList<>(providerArray.length);
-        for (int i = 0; i < providerArray.length; i++) {
-            if (i + skip >= providerArray.length)
-                returnList.add(i, null);
-            else
-                returnList.add(i, providerArray[i + skip]);
-        }
-        return returnList;
-
-        //return new ArrayList<ProviderEntity>(Arrays.asList(providerArray));
+        return new ArrayList<>(Arrays.asList(providerArray));
     }
 
     /**
@@ -189,7 +160,26 @@ public class IngestionLinker {
         ProviderEntity[] providerArray = response.getBody();
 
         assert providerArray != null;
-        return new ArrayList<ProviderEntity>(Arrays.asList(providerArray));
+        return new ArrayList<>(Arrays.asList(providerArray));
+    }
+
+    /**
+     * Private method for converting posts coming from Ingestion.
+     * @param ingestionArray the array of posts
+     * @return a list of PostEntity objects
+     */
+    private List<PostEntity> getPostEntities(IngestionEntity[] ingestionArray) {
+        List<PostEntity> responseList = new ArrayList<>(ingestionArray.length);
+
+        for (int i = 0; i < ingestionArray.length; i++) {
+            // We need to sent an AiEntity to the AI module and get the associated result
+            ScoreResult responseScore = ingestion.postForObject("https://ai-communication-module.herokuapp.com/ai-module/", convertToAiEntity(ingestionArray[i]), ScoreResult.class);
+
+            // We need to build a PostEntity with the associated score and information
+            assert responseScore != null;
+            responseList.add(i, convertToPostEntity(ingestionArray[i], responseScore.getScore()));
+        }
+        return responseList;
     }
 
     /**
