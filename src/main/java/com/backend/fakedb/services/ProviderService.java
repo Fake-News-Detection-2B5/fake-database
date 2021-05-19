@@ -15,26 +15,24 @@ import java.util.stream.Collectors;
 @Service
 public class ProviderService {
 
-    private final ProviderRepository providerRepository;
     private final SessionRepository sessionRepository;
     private final IngestionLinker ingestionLinker = new IngestionLinker();
 
     @Autowired
-    public ProviderService(ProviderRepository providerRepository, SessionRepository sessionRepository) {
-        this.providerRepository = providerRepository;
+    public ProviderService(SessionRepository sessionRepository) {
         this.sessionRepository = sessionRepository;
     }
 
     /**
      * Public method that returns a List with all available providers.
-     * @param auth_id user's authentification id
-     * @param token user's authentification token
+     * @param auth_id user's authentication id
+     * @param token user's authentication token
      * @return a List containing all providers
      */
     public List<ProviderEntity> getAll(int auth_id, String token) {
 
         if (sessionRepository.findAll().stream().anyMatch(session -> session.getUser_id() == auth_id && session.getToken().equals(token))) {
-            return ingestionLinker.provider_getAll();
+            return ingestionLinker.providerGetAll();
         }
         return null;
     }
@@ -54,7 +52,7 @@ public class ProviderService {
             return null;
         }
 
-        return ingestionLinker.provider_getInterval(s, c);
+        return ingestionLinker.providerGetInterval(s, c);
     }
 
     /**
@@ -65,21 +63,21 @@ public class ProviderService {
      */
     public IntWrapper getCount(int auth_id, String token) {
         if (sessionRepository.findAll().stream().anyMatch(session -> session.getUser_id() == auth_id && session.getToken().equals(token))) {
-            return ingestionLinker.provider_getCount();
+            return ingestionLinker.providerGetCount();
         }
         return null;
     }
 
     /**
      * Public method for getting the amount of providers in the database that contain the given string.
-     * @param auth_id user's authentification id
-     * @param token user's authentification token
+     * @param auth_id user's authentication id
+     * @param token user's authentication token
      * @param query string to be contained in the name of the provider
      * @return an IntWrapper containing the number of providers
      */
     public IntWrapper searchCount(int auth_id, String token, String query) {
         if (sessionRepository.findAll().stream().anyMatch(session -> session.getUser_id() == auth_id && session.getToken().equals(token))) {
-            return ingestionLinker.provider_searchCount(query);
+            return ingestionLinker.providerSearchCount(query);
         }
         return null;
     }
@@ -87,8 +85,8 @@ public class ProviderService {
     /**
      * Public method for getting the amount of providers in the database that contain the given string.
      * If the given skip and count parameters exceed the database limit, null objects will be added to the list.
-     * @param auth_id user's authentification id
-     * @param token user's authentification token
+     * @param auth_id user's authentication id
+     * @param token user's authentication token
      * @param query string that needs to be contained by the provider's name
      * @param s the amount of providers to be skipped (a number greater than or equal to zero)
      * @param c the amount of providers to be returned (a number greater that zero)
@@ -98,7 +96,7 @@ public class ProviderService {
         if (sessionRepository.findAll().stream().noneMatch(session -> session.getUser_id() == auth_id && session.getToken().equals(token))) {
             return null;
         }
-        return ingestionLinker.provider_search(query, s, c);
+        return ingestionLinker.providerSearch(query, s, c);
     }
 
     public Optional<ProviderEntity> getById(Integer auth_id, String token, int prov_id) {

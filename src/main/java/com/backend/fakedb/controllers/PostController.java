@@ -19,9 +19,9 @@ public class PostController {
     }
 
     /**
-     * public method for getting a list of posts from the ingestion system
-     * @param auth_id user's authentification id
-     * @param token user's authentification token
+     * Public method for getting a list of posts from the ingestion system
+     * @param auth_id user's authentication id
+     * @param token user's authentication token
      * @param skip the amount of rows the user wants the system to skip
      * @param count the number of posts the user wants the system to return
      * @return a list of PostEntities (the list of posts the user requested)
@@ -36,9 +36,9 @@ public class PostController {
     }
 
     /**
-     * public method for getting a list of posts from a specific provider
-     * @param auth_id user's authentification id
-     * @param token user's authentification token
+     * Public method for getting a list of posts from a specific provider
+     * @param auth_id user's authentication id
+     * @param token user's authentication token
      * @param provider_id post provider's id
      * @param skip the amount of rows the user wants the system to skip
      * @param count the number of posts the user wants the system to return

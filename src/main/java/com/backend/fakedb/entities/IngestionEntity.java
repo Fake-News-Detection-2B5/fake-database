@@ -19,19 +19,19 @@ public class IngestionEntity {
 
     Date postDate;
 
-    String sourceUrl;
+    String url;
 
     public IngestionEntity() {
     }
 
-    public IngestionEntity(UUID id, String title, String thumbnail, String content, String description, Date postDate, String sourceUrl) {
+    public IngestionEntity(UUID id, String title, String thumbnail, String content, String description, Date postDate, String url) {
         this.id = id;
         this.title = title;
         this.thumbnail = thumbnail;
         this.content = content;
         this.description = description;
         this.postDate = postDate;
-        this.sourceUrl = sourceUrl;
+        this.url = url;
     }
 
     public UUID getId() {
@@ -82,11 +82,11 @@ public class IngestionEntity {
         this.postDate = postDate;
     }
 
-    public String getSourceUrl() {
-        return sourceUrl;
+    public String getUrl() {
+        return url;
     }
 
-    public void setSourceUrl(String sourceUrl) {
-        this.sourceUrl = sourceUrl;
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

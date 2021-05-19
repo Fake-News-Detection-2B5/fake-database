@@ -4,16 +4,11 @@ import com.backend.fakedb.entities.AiEntity;
 import com.backend.fakedb.entities.IngestionEntity;
 import com.backend.fakedb.entities.PostEntity;
 import com.backend.fakedb.entities.ProviderEntity;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.http.HttpClient;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -103,37 +98,10 @@ public class IngestionLinker {
     }
 
     /**
-     * Private method that converts a given ingestion entity to a AI entity.
-     * @param ingestionEntity the entity to be converted
-     * @return the AI entity
-     */
-    private AiEntity convertToAiEntity(IngestionEntity ingestionEntity) {
-        return new AiEntity(ingestionEntity.getId().hashCode(),
-                            ingestionEntity.getTitle(),
-                            ingestionEntity.getContent());
-    }
-
-    /**
-     * Private method that converts a given ingestion entity to a Post entity.
-     * @param ingestionEntity the entity to be converted
-     * @param score the associated score for this specific post
-     * @return the Post entity
-     */
-    private PostEntity convertToPostEntity(IngestionEntity ingestionEntity, String score) {
-        return new PostEntity(ingestionEntity.getId().hashCode(),
-                                ingestionEntity.getTitle(),
-                                ingestionEntity.getThumbnail(),
-                                ingestionEntity.getDescription(),
-                                ingestionEntity.getPostDate(),
-                                score,
-                                ingestionEntity.getSourceUrl());
-    }
-
-    /**
      * Public method for getting a list of all the ProviderEntity objects from the posts database.
      * @return the list
      */
-    public List<ProviderEntity> provider_getAll() {
+    public List<ProviderEntity> providerGetAll() {
 
         // The response will return all providers from the database
         ResponseEntity<ProviderEntity[]> response =
@@ -151,7 +119,7 @@ public class IngestionLinker {
      * @param count the amount of rows to receive (must be a number greater than zero)
      * @return the specified list
      */
-    public List<ProviderEntity> provider_getInterval(int skip, int count) {
+    public List<ProviderEntity> providerGetInterval(int skip, int count) {
         if (skip < 0 || count < 1) {
             return null;
         }
@@ -173,7 +141,7 @@ public class IngestionLinker {
      * Public method for getting count of all the providers.
      * @return the count
      */
-    public IntWrapper provider_getCount() {
+    public IntWrapper providerGetCount() {
 
         // The response will return all providers from the database
         ResponseEntity<IntWrapper> response =
@@ -187,7 +155,7 @@ public class IngestionLinker {
      * @return  the count
      * */
 
-    public IntWrapper provider_searchCount(String queryToBeContained){
+    public IntWrapper providerSearchCount(String queryToBeContained){
         ResponseEntity<IntWrapper> response =
                 ingestion.getForEntity("https://fake-news-detection-ingestion.herokuapp.com/v1/api/news/searchCount?query=" + queryToBeContained, IntWrapper.class);
         return response.getBody();
@@ -202,7 +170,7 @@ public class IngestionLinker {
      * @return the specified list
      */
 
-    public List<ProviderEntity> provider_search(String query, int skip, int count){
+    public List<ProviderEntity> providerSearch(String query, int skip, int count){
         if (skip < 0 || count < 1) {
             return null;
         }
@@ -215,5 +183,31 @@ public class IngestionLinker {
         return new ArrayList<ProviderEntity>(Arrays.asList(providerArray));
     }
 
+    /**
+     * Private method that converts a given ingestion entity to a AI entity.
+     * @param ingestionEntity the entity to be converted
+     * @return the AI entity
+     */
+    private AiEntity convertToAiEntity(IngestionEntity ingestionEntity) {
+        return new AiEntity(ingestionEntity.getId().hashCode(),
+                ingestionEntity.getTitle(),
+                ingestionEntity.getContent());
+    }
+
+    /**
+     * Private method that converts a given ingestion entity to a Post entity.
+     * @param ingestionEntity the entity to be converted
+     * @param score the associated score for this specific post
+     * @return the Post entity
+     */
+    private PostEntity convertToPostEntity(IngestionEntity ingestionEntity, String score) {
+        return new PostEntity(ingestionEntity.getId().hashCode(),
+                ingestionEntity.getTitle(),
+                ingestionEntity.getThumbnail(),
+                ingestionEntity.getDescription(),
+                ingestionEntity.getPostDate(),
+                score,
+                ingestionEntity.getUrl());
+    }
 
 }

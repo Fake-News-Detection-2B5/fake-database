@@ -31,19 +31,19 @@ public class PostEntity {
     String score;
 
     // The source URL
-    String sourceUrl;
+    String url;
 
     public PostEntity() {
     }
 
-    public PostEntity(Integer id, String thumbnail, String title, String description, Date postDate, String score, String sourceUrl) {
+    public PostEntity(Integer id, String thumbnail, String title, String description, Date postDate, String score, String url) {
         this.id = id;
         this.thumbnail = thumbnail;
         this.title = title;
         this.description = description;
         this.postDate = postDate;
         this.score = score;
-        this.sourceUrl = sourceUrl;
+        this.url = url;
     }
 
     public Integer getId() {
@@ -94,11 +94,11 @@ public class PostEntity {
         this.score = score;
     }
 
-    public String getSourceUrl() {
-        return sourceUrl;
+    public String getUrl() {
+        return url;
     }
 
-    public void setSourceUrl(String sourceUrl) {
-        this.sourceUrl = sourceUrl;
+    public void setUrl(String sourceUrl) {
+        this.url = sourceUrl;
     }
 }
