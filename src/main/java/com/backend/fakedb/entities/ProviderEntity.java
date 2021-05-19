@@ -2,14 +2,18 @@ package com.backend.fakedb.entities;
 
 import javax.persistence.*;
 
-@Entity
-@Table
+//@Entity
+//@Table
+
+/**
+ * Entity coming from Ingestion
+ */
 public class ProviderEntity {
 
     // The associated id
-    @Id
-    @GeneratedValue
-    @Column(name = "provider_id")
+//    @Id
+//    @GeneratedValue
+//    @Column(name = "provider_id")
     Integer id;
 
     // The provider's name (for example BBC)

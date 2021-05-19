@@ -134,7 +134,16 @@ public class IngestionLinker {
             return null;
         }
 
-        return new ArrayList<ProviderEntity>(Arrays.asList(providerArray));
+        List<ProviderEntity> returnList = new ArrayList<>(providerArray.length);
+        for (int i = 0; i < providerArray.length; i++) {
+            if (i + skip >= providerArray.length)
+                returnList.add(i, null);
+            else
+                returnList.add(i, providerArray[i + skip]);
+        }
+        return returnList;
+
+        //return new ArrayList<ProviderEntity>(Arrays.asList(providerArray));
     }
 
     /**
