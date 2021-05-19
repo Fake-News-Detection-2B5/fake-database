@@ -1,9 +1,16 @@
 package com.backend.fakedb.utilities;
 
 public final class IntWrapper {
-    private final int count;
+    private int count;
+
+    public IntWrapper() {
+    }
 
     public IntWrapper(int count) {
+        this.count = count;
+    }
+
+    public void setCount(int count) {
         this.count = count;
     }
 

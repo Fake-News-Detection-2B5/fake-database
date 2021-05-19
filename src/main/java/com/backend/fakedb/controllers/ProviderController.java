@@ -32,8 +32,8 @@ public class ProviderController {
 
     /**
      * Public method for requesting all providers from the database
-     * @param auth_id user's authentification id
-     * @param token user's authentification token
+     * @param auth_id user's authentication id
+     * @param token user's authentication token
      * @return a List with every ProviderEntity from the database
      */
     @GetMapping(path = "/getAll")
@@ -45,8 +45,8 @@ public class ProviderController {
 
     /**
      * Public method for requesting a specific number of providers from the database
-     * @param auth_id user's authentification id
-     * @param token user's authentification token
+     * @param auth_id user's authentication id
+     * @param token user's authentication token
      * @param s used for skipping a number of rows from the database
      * @param c how many rows are necessary
      * @return a List with the ProviderEntity requested
@@ -62,8 +62,8 @@ public class ProviderController {
 
     /**
      * Public method for requesting the total number of providers enlisted in the database
-     * @param auth_id user's authentification id
-     * @param token user's authentification token
+     * @param auth_id user's authentication id
+     * @param token user's authentication token
      * @return the number of providers as a IntWrapper class
      */
     @GetMapping(path = "/getCount")
