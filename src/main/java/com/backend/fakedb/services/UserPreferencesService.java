@@ -2,11 +2,10 @@ package com.backend.fakedb.services;
 
 import com.backend.fakedb.entities.ProviderEntity;
 import com.backend.fakedb.entities.UserPreferencesEntity;
-import com.backend.fakedb.entities.UserPreferencesPK;
-import com.backend.fakedb.repositories.ProviderRepository;
 import com.backend.fakedb.repositories.SessionRepository;
 import com.backend.fakedb.repositories.UserPreferencesRepository;
 import com.backend.fakedb.repositories.UserRepository;
+import com.backend.fakedb.utilities.IngestionLinker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,17 +17,15 @@ public class UserPreferencesService {
 
     private final UserPreferencesRepository upRepository;
     private final UserRepository userRepository;
-    private final ProviderRepository providerRepository;
     private final SessionRepository sessionRepository;
+    private final IngestionLinker ingestionLinker;
 
     @Autowired
-    public UserPreferencesService(
-            UserPreferencesRepository upRepository, UserRepository userRepository,
-            ProviderRepository providerRepository, SessionRepository sessionRepository) {
+    public UserPreferencesService(UserPreferencesRepository upRepository, UserRepository userRepository, SessionRepository sessionRepository) {
         this.upRepository = upRepository;
         this.userRepository = userRepository;
-        this.providerRepository = providerRepository;
         this.sessionRepository = sessionRepository;
+        ingestionLinker = new IngestionLinker();
     }
 
     /**
@@ -40,9 +37,9 @@ public class UserPreferencesService {
     }
 
     /**
-     * public method that subscribes a specified user to a list of providers
-     * @param auth_id user's authentification id
-     * @param token user's authentification token
+     * Public method that subscribes a specified user to a list of providers
+     * @param auth_id user's authentication id
+     * @param token user's authentication token
      * @param uid user's id
      * @param providerIDs list of provider's ids
      * @return true, if the process has been successful and false, otherwise
@@ -52,21 +49,22 @@ public class UserPreferencesService {
             return false;
         }
 
+        var providerList = ingestionLinker.providerGetAll();
+
         for (var prov_id : providerIDs) {
             var user = userRepository.findById(uid);
-            var provider = providerRepository.findById(prov_id);
-            if (user.isEmpty() || provider.isEmpty()) {
+            var prov = providerList.stream().filter(p -> p.getId().equals(prov_id)).findFirst();
+            if (user.isEmpty() || prov.isEmpty())
                 return false;
-            }
-            upRepository.save(new UserPreferencesEntity(new UserPreferencesPK(user.get(), provider.get()), true));
+            upRepository.save(new UserPreferencesEntity(user.get().getId(), prov.get().getId(), true));
         }
         return true;
     }
 
     /**
-     * public method for checking if a specified user is subscribed to a specified provider
-     * @param auth_id user's authentification id
-     * @param token user's authentification token
+     * Public method for checking if a specified user is subscribed to a specified provider
+     * @param auth_id user's authentication id
+     * @param token user's authentication token
      * @param uid user's id
      * @param prov_id provider's id
      * @return true, if the user is subscribed to the specified provider and false, otherwise
@@ -77,12 +75,16 @@ public class UserPreferencesService {
         }
 
         var user = userRepository.findById(uid);
-        var provider = providerRepository.findById(prov_id);
-        if (user.isEmpty() || provider.isEmpty()) {
+        if (user.isEmpty()) {
             return false;
         }
 
-        var result = upRepository.findById(new UserPreferencesPK(user.get(), provider.get()));
+        var provider = ingestionLinker.providerGetAll().stream().filter(p -> p.getId().equals(prov_id)).findFirst();
+        if (provider.isEmpty()) {
+            return false;
+        }
+
+        var result = upRepository.findAll().stream().filter(p -> p.getUserId().equals(uid) && p.getProviderId().equals(prov_id)).findFirst();
         if (result.isEmpty()) {
             return false;
         }
@@ -90,9 +92,9 @@ public class UserPreferencesService {
     }
 
     /**
-     * public method for getting the providers a specified user is subscribed to
-     * @param auth_id user's authentification id
-     * @param token user's authentification token
+     * Public method for getting the providers a specified user is subscribed to
+     * @param auth_id user's authentication id
+     * @param token user's authentication token
      * @param uid user's id
      * @param skip skip a specified number of entries
      * @param count the specified number of entries the method returns
@@ -105,11 +107,11 @@ public class UserPreferencesService {
 
         var providerIDListForCurrentUser = upRepository.findAll().stream()
                 .filter(UserPreferencesEntity::isSubscribed)
-                .filter(entry -> entry.getUserID() == uid)
-                .map(UserPreferencesEntity::getProviderID)
+                .filter(entry -> entry.getUserId() == uid)
+                .map(UserPreferencesEntity::getProviderId)
                 .collect(Collectors.toSet());
 
-        return providerRepository.findAll().stream()
+        return ingestionLinker.providerGetAll().stream()
                 .filter(entry -> providerIDListForCurrentUser.contains(entry.getId()))
                 .skip(skip)
                 .limit(count)
@@ -117,9 +119,9 @@ public class UserPreferencesService {
     }
 
     /**
-     * public method that updates the subscription status of a specified user for a specified provider
-     * @param auth_id user's authentification id
-     * @param token user's authentification token
+     * Public method that updates the subscription status of a specified user for a specified provider
+     * @param auth_id user's authentication id
+     * @param token user's authentication token
      * @param uid user's id
      * @param prov_id provider's id
      * @param status subscription status (true, if the user wants to be subscribed and false, otherwise)
@@ -131,16 +133,12 @@ public class UserPreferencesService {
         }
 
         var user = userRepository.findById(uid);
-        var provider = providerRepository.findById(prov_id);
+        var provider = ingestionLinker.providerGetAll().stream().filter(p -> p.getId().equals(prov_id)).findFirst();
         if (user.isEmpty() || provider.isEmpty()) {
             return false;
         }
 
-        var preferencesID = new UserPreferencesPK(user.get(), provider.get());
-        if (upRepository.findById(preferencesID).isPresent()) {
-            upRepository.deleteById(preferencesID);
-        }
-        upRepository.save(new UserPreferencesEntity(preferencesID, status));
+        upRepository.update(uid, prov_id, status);
         return true;
     }
 }

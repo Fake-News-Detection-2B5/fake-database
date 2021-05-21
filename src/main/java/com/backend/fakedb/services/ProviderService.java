@@ -1,7 +1,6 @@
 package com.backend.fakedb.services;
 
 import com.backend.fakedb.entities.ProviderEntity;
-import com.backend.fakedb.repositories.ProviderRepository;
 import com.backend.fakedb.repositories.SessionRepository;
 import com.backend.fakedb.utilities.IngestionLinker;
 import com.backend.fakedb.utilities.IntWrapper;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ProviderService {
@@ -57,8 +55,8 @@ public class ProviderService {
 
     /**
      * Public method for getting the amount of providers in the database.
-     * @param auth_id user's authentification id
-     * @param token user's authentification token
+     * @param auth_id user's authentication id
+     * @param token user's authentication token
      * @return the amount of providers in the database in a IntWrapper class
      */
     public IntWrapper getCount(int auth_id, String token) {

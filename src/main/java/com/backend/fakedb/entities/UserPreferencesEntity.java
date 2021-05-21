@@ -7,8 +7,13 @@ import java.io.Serializable;
 @Table
 public class UserPreferencesEntity {
 
-    @EmbeddedId
-    private UserPreferencesPK id;
+    @Id
+    @GeneratedValue
+    private Integer id;
+
+    private Integer userId;
+
+    private Integer providerId;
 
     // Is the user subscribed to this particular provider?
     boolean subscribed;
@@ -16,17 +21,41 @@ public class UserPreferencesEntity {
     public UserPreferencesEntity() {
     }
 
-    public UserPreferencesEntity(UserPreferencesPK id, boolean subscribed) {
+    public UserPreferencesEntity(Integer id, Integer userId, Integer providerId, boolean subscribed) {
         this.id = id;
+        this.userId = userId;
+        this.providerId = providerId;
         this.subscribed = subscribed;
     }
 
-    public UserPreferencesPK getId() {
+    public UserPreferencesEntity(Integer userId, Integer providerId, boolean subscribed) {
+        this.userId = userId;
+        this.providerId = providerId;
+        this.subscribed = subscribed;
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(UserPreferencesPK id) {
+    public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public Integer getProviderId() {
+        return providerId;
+    }
+
+    public void setProviderId(Integer providerId) {
+        this.providerId = providerId;
     }
 
     public boolean isSubscribed() {
@@ -35,13 +64,5 @@ public class UserPreferencesEntity {
 
     public void setSubscribed(boolean subscribed) {
         this.subscribed = subscribed;
-    }
-
-    public int getUserID() {
-        return id.getUserID();
-    }
-
-    public int getProviderID() {
-        return id.getProviderID();
     }
 }
