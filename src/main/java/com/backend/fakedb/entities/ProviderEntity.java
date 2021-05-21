@@ -11,9 +11,6 @@ import javax.persistence.*;
 public class ProviderEntity {
 
     // The associated id
-//    @Id
-//    @GeneratedValue
-//    @Column(name = "provider_id")
     Integer id;
 
     // The provider's name (for example BBC)

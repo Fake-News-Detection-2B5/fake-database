@@ -26,9 +26,9 @@ public class UserPreferencesController {
     }
 
     /**
-     * public method that subscribes the user to a list of providers specified by their ids
-     * @param auth_id user's authetification id
-     * @param token user's authentification token
+     * Public method that subscribes the user to a list of providers specified by their ids
+     * @param auth_id user's authentication id
+     * @param token user's authentication token
      * @param uid user's id
      * @param providerIDs provider id list
      * @return true, if user has been subscribed to all providers in the specified list and false, otherwise
