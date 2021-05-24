@@ -1,6 +1,7 @@
 package com.backend.fakedb.services;
 
 import com.backend.fakedb.entities.PostEntity;
+import com.backend.fakedb.entities.ProviderEntity;
 import com.backend.fakedb.repositories.SessionRepository;
 import com.backend.fakedb.utilities.IngestionLinker;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +14,12 @@ public class PostService {
 
     private IngestionLinker ingestionLinker;
     private final SessionRepository sessionRepository;
+    private final UserPreferencesService userService;
 
     @Autowired
-    public PostService(SessionRepository sessionRepository) {
+    public PostService(SessionRepository sessionRepository, UserPreferencesService userService) {
         this.sessionRepository = sessionRepository;
+        this.userService = userService;
         ingestionLinker = new IngestionLinker();
     }
 
@@ -37,9 +40,23 @@ public class PostService {
      * @return a list of size 'c' of PostEntity objects
      */
     public List<PostEntity> getInterval(int auth_id, String token, int s, int c) {
+
+
         if (sessionRepository.findAll().stream().anyMatch(session -> session.getUser_id() == auth_id && session.getToken().equals(token))) {
-            return ingestionLinker.getInterval(s, c);
+
+            List<ProviderEntity> providerList = userService.getProviderListForUser(auth_id, token, auth_id, 0, 10);
+
+            StringBuilder sb = new StringBuilder();
+
+            for(var provider : providerList)
+            {
+                sb.append("list=").append(provider.getId()).append("&");
+            }
+
+            System.out.println(sb.toString());
+            return ingestionLinker.getInterval(s, c, sb.toString());
         }
+
         return null;
     }
 

@@ -31,16 +31,17 @@ public class IngestionLinker {
      * If the given arguments surpass the amount of rows in the database, null objects will be added to the list.
      * @param skip the amount of rows to skip (must be a number greater than or equal to zero)
      * @param count the amount of rows to receive (must be a number greater than zero)
+     * @param credentials
      * @return the specified list
      */
-    public List<PostEntity> getInterval(int skip, int count) {
+    public List<PostEntity> getInterval(int skip, int count, String credentials) {
         if (skip < 0 || count < 1) {
             return null;
         }
 
         // The response will return posts from the database, according to the skip and count parameters
         ResponseEntity<IngestionEntity[]> response =
-                ingestion.getForEntity("https://fake-news-detection-ingestion.herokuapp.com/v1/api/news/getInterval?skip=" + skip + "&count=" + count, IngestionEntity[].class);
+                ingestion.getForEntity("https://fake-news-detection-ingestion.herokuapp.com/v1/api/news/getIntervalByArray?" + credentials + "skip=" + skip + "&count=" + count, IngestionEntity[].class);
         IngestionEntity[] ingestionArray = response.getBody();
 
         // If the list is null, don't continue.
@@ -111,14 +112,14 @@ public class IngestionLinker {
      * @param count the amount of rows to receive (must be a number greater than zero)
      * @return the specified list
      */
-    public List<ProviderEntity> providerGetIntervalByArray(int skip, int count, String credentials) {
+    public List<ProviderEntity> providerGetInterval(int skip, int count) {
         if (skip < 0 || count < 1) {
             return null;
         }
 
         // The response will return providers from the database, according to the skip and count parameters
         ResponseEntity<ProviderEntity[]> response =
-                ingestion.getForEntity("https://fake-news-detection-ingestion.herokuapp.com/v1/api/news/providers/getIntervalByArray?" + credentials + "&skip=" + skip + "&count=" + count, ProviderEntity[].class);
+                ingestion.getForEntity("https://fake-news-detection-ingestion.herokuapp.com/v1/api/news/providers/getInterval?skip=" + skip + "&count=" + count, ProviderEntity[].class);
         ProviderEntity[] providerArray = response.getBody();
 
         // If the list is null, don't continue.

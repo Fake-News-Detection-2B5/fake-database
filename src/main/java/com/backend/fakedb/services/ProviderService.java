@@ -16,12 +16,10 @@ public class ProviderService {
 
     private final SessionRepository sessionRepository;
     private final IngestionLinker ingestionLinker = new IngestionLinker();
-    private final UserPreferencesService userService;
 
     @Autowired
-    public ProviderService(SessionRepository sessionRepository, UserPreferencesService userService) {
+    public ProviderService(SessionRepository sessionRepository) {
         this.sessionRepository = sessionRepository;
-        this.userService = userService;
     }
 
     public List<ProviderEntity> getAll() {
@@ -57,17 +55,7 @@ public class ProviderService {
             return null;
         }
 
-        List<ProviderEntity> providerList = userService.getProviderListForUser(auth_id, token, auth_id, 0, 10);
-
-        StringBuilder sb = new StringBuilder();
-
-        for(var provider : providerList)
-        {
-            sb.append("list=").append(provider.getId()).append("&");
-        }
-
-        System.out.println(sb.toString());
-        return ingestionLinker.providerGetIntervalByArray(s, c, sb.toString());
+        return ingestionLinker.providerGetInterval(s, c);
     }
 
     /**
