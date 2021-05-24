@@ -40,8 +40,20 @@ public class IngestionLinker {
         }
 
         // The response will return posts from the database, according to the skip and count parameters
+        StringBuilder sb = new StringBuilder("https://fake-news-detection-ingestion.herokuapp.com/v1/api/news/getIntervalByArray?");
+        sb.append(credentials).append("skip=").append(skip).append("&count=").append(count);
+        if(order != null) {
+            sb.append("&order=").append(order);
+        }
+        if(query != null) {
+            sb.append("&query=").append(query);
+        }
+        if(date != null) {
+            sb.append("&date=").append(date);
+        }
         ResponseEntity<IngestionEntity[]> response =
-                ingestion.getForEntity("https://fake-news-detection-ingestion.herokuapp.com/v1/api/news/getIntervalByArray?" + credentials + "skip=" + skip + "&count=" + count + "&order=" + order + "&query=" + query + "&date=" + date, IngestionEntity[].class);
+                ingestion.getForEntity(sb.toString(), IngestionEntity[].class);
+
         IngestionEntity[] ingestionArray = response.getBody();
 
         // If the list is null, don't continue.
