@@ -212,7 +212,7 @@ public class IngestionLinker {
                 ingestionEntity.getTitle(),
                 ingestionEntity.getThumbnail(),
                 ingestionEntity.getDescription(),
-                Date.valueOf(ingestionEntity.getPostDate()),
+                ingestionEntity.getPostDate(),
                 score,
                 ingestionEntity.getUrl());
     }

@@ -25,7 +25,7 @@ public class PostEntity {
     String description;
 
     // The date when the post was published
-    Date postDate;
+    String postDate;
 
     // The associated score, which can be either TRUE, FALSE or PARTIALLY FALSE
     String score;
@@ -36,7 +36,7 @@ public class PostEntity {
     public PostEntity() {
     }
 
-    public PostEntity(Integer id, String thumbnail, String title, String description, Date postDate, String score, String url) {
+    public PostEntity(Integer id, String thumbnail, String title, String description, String postDate, String score, String url) {
         this.id = id;
         this.thumbnail = thumbnail;
         this.title = title;
@@ -78,11 +78,11 @@ public class PostEntity {
         this.description = description;
     }
 
-    public Date getPostDate() {
+    public String getPostDate() {
         return postDate;
     }
 
-    public void setPostDate(Date postDate) {
+    public void setPostDate(String postDate) {
         this.postDate = postDate;
     }
 
