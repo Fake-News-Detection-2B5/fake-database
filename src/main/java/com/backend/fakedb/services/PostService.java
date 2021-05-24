@@ -39,7 +39,7 @@ public class PostService {
      * @param c the number of posts to return (must be a number greater than zero)
      * @return a list of size 'c' of PostEntity objects
      */
-    public List<PostEntity> getInterval(int auth_id, String token, int s, int c) {
+    public List<PostEntity> getInterval(int auth_id, String token, int s, int c, String order, String query, String date) {
 
 
         if (sessionRepository.findAll().stream().anyMatch(session -> session.getUser_id() == auth_id && session.getToken().equals(token))) {
@@ -54,7 +54,7 @@ public class PostService {
             }
 
             System.out.println(sb.toString());
-            return ingestionLinker.getInterval(s, c, sb.toString());
+            return ingestionLinker.getInterval(s, c, sb.toString(), order, query, date);
         }
 
         return null;

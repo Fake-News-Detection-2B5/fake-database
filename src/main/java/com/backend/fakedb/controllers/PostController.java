@@ -31,8 +31,13 @@ public class PostController {
             @RequestHeader(name = "X-Auth-User") Integer auth_id,
             @RequestHeader(name = "X-Auth-Token") String token,
             @RequestParam(name = "skip", required = true) Integer skip,
-            @RequestParam(name = "count", required = true) Integer count) {
-        return postService.getInterval(auth_id, token, skip, count);
+            @RequestParam(name = "count", required = true) Integer count,
+            @RequestParam(name = "order", required = false) String order,
+            @RequestParam(name = "query", required = false) String query,
+            @RequestParam(name = "date", required = false) String date
+    )
+    {
+        return postService.getInterval(auth_id, token, skip, count, order, query, date);
     }
 
     /**

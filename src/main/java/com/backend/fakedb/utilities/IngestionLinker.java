@@ -34,14 +34,14 @@ public class IngestionLinker {
      * @param credentials
      * @return the specified list
      */
-    public List<PostEntity> getInterval(int skip, int count, String credentials) {
+    public List<PostEntity> getInterval(int skip, int count, String credentials, String order, String query, String date) {
         if (skip < 0 || count < 1) {
             return null;
         }
 
         // The response will return posts from the database, according to the skip and count parameters
         ResponseEntity<IngestionEntity[]> response =
-                ingestion.getForEntity("https://fake-news-detection-ingestion.herokuapp.com/v1/api/news/getIntervalByArray?" + credentials + "skip=" + skip + "&count=" + count, IngestionEntity[].class);
+                ingestion.getForEntity("https://fake-news-detection-ingestion.herokuapp.com/v1/api/news/getIntervalByArray?" + credentials + "skip=" + skip + "&count=" + count + "&order=" + order + "&query=" + query + "&date=" + date, IngestionEntity[].class);
         IngestionEntity[] ingestionArray = response.getBody();
 
         // If the list is null, don't continue.
