@@ -1,6 +1,7 @@
 package com.backend.fakedb.controllers;
 
 import com.backend.fakedb.entities.UserEntity;
+import com.backend.fakedb.services.UserPreferencesService;
 import com.backend.fakedb.services.UserService;
 import com.backend.fakedb.utilities.LoginResponseWrapper;
 import org.springframework.beans.factory.annotation.Autowired;

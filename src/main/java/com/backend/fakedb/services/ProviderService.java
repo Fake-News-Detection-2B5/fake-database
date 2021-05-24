@@ -24,6 +24,10 @@ public class ProviderService {
         this.userService = userService;
     }
 
+    public List<ProviderEntity> getAll() {
+        return ingestionLinker.providerGetAll();
+    }
+
     /**
      * Public method that returns a List with all available providers.
      * @param auth_id user's authentication id

@@ -15,14 +15,14 @@ public class IngestionEntity {
 
     String description;
 
-    Date postDate;
+    String postDate;
 
     String url;
 
     public IngestionEntity() {
     }
 
-    public IngestionEntity(UUID id, String title, String thumbnail, String description, Date postDate, String url) {
+    public IngestionEntity(UUID id, String title, String thumbnail, String description, String postDate, String url) {
         this.id = id;
         this.title = title;
         this.thumbnail = thumbnail;
@@ -64,11 +64,11 @@ public class IngestionEntity {
         this.description = description;
     }
 
-    public Date getPostDate() {
+    public String getPostDate() {
         return postDate;
     }
 
-    public void setPostDate(Date postDate) {
+    public void setPostDate(String postDate) {
         this.postDate = postDate;
     }
 
