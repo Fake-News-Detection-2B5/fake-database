@@ -70,26 +70,26 @@ public class UserPreferencesService {
      * @param prov_id provider's id
      * @return true, if the user is subscribed to the specified provider and false, otherwise
      */
-    public boolean isSubscribed(int auth_id, String token, int uid, int prov_id) {
+    public int isSubscribed(int auth_id, String token, int uid, int prov_id) {
         if (sessionRepository.findAll().stream().noneMatch(session -> session.getUser_id() == auth_id && session.getToken().equals(token))) {
-            return false;
+            return -1;
         }
 
         var user = userRepository.findById(uid);
         if (user.isEmpty()) {
-            return false;
+            return -2;
         }
 
         var provider = ingestionLinker.providerGetAll().stream().filter(p -> p.getId().equals(prov_id)).findFirst();
         if (provider.isEmpty()) {
-            return false;
+            return -3;
         }
 
         var result = upRepository.findAll().stream().filter(p -> p.getUserId().equals(uid) && p.getProviderId().equals(prov_id)).findFirst();
         if (result.isEmpty()) {
-            return false;
+            return -4;
         }
-        return result.get().isSubscribed();
+        return result.get().isSubscribed() ? 1 : 0;
     }
 
     /**

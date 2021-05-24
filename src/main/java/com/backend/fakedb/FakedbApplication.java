@@ -1,5 +1,6 @@
 package com.backend.fakedb;
 
+import com.backend.fakedb.services.UserPreferencesService;
 import com.backend.fakedb.utilities.IngestionLinker;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

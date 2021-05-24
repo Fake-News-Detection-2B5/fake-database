@@ -54,7 +54,7 @@ public class UserPreferencesController {
      * @return true, if the user is subscribed to the specified provider and false, otherwise
      */
     @GetMapping("/isSubscribed")
-    public boolean isSubscribed(
+    public int isSubscribed(
             @RequestHeader(name = "X-Auth-User") Integer auth_id,
             @RequestHeader(name = "X-Auth-Token") String token,
             @RequestParam(name = "uid", required = true) int uid,
