@@ -81,7 +81,12 @@ public class IngestionLinker {
             return null;
         }
 
-        return getPostEntities(ingestionArray);
+        // return getPostEntities(ingestionArray);
+        List<PostEntity> postEntityList = new ArrayList<>(ingestionArray.length);
+        for (IngestionEntity i : ingestionArray) {
+            postEntityList.add(convertToPostEntity(i, "dont-believe-this"));
+        }
+        return postEntityList;
     }
 
     /**
