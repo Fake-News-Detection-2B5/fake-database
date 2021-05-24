@@ -65,7 +65,8 @@ public class ProviderService {
         {
             sb.append("list=").append(provider.getId()).append("&");
         }
-        
+
+        System.out.println(sb.toString());
         return ingestionLinker.providerGetIntervalByArray(s, c, sb.toString());
     }
 
