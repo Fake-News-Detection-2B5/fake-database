@@ -1,15 +1,14 @@
 package com.backend.fakedb.utilities;
 
-import com.backend.fakedb.entities.AiEntity;
-import com.backend.fakedb.entities.IngestionEntity;
-import com.backend.fakedb.entities.PostEntity;
-import com.backend.fakedb.entities.ProviderEntity;
+import com.backend.fakedb.entities.*;
+import com.backend.fakedb.services.UserPreferencesService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Class that handles the communication between the ingestion system and this app.
@@ -99,14 +98,14 @@ public class IngestionLinker {
      * @param count the amount of rows to receive (must be a number greater than zero)
      * @return the specified list
      */
-    public List<ProviderEntity> providerGetInterval(int skip, int count) {
+    public List<ProviderEntity> providerGetIntervalByArray(int skip, int count, String credentials) {
         if (skip < 0 || count < 1) {
             return null;
         }
 
         // The response will return providers from the database, according to the skip and count parameters
         ResponseEntity<ProviderEntity[]> response =
-                ingestion.getForEntity("https://fake-news-detection-ingestion.herokuapp.com/v1/api/news/providers/getInterval?skip=" + skip + "&count=" + count, ProviderEntity[].class);
+                ingestion.getForEntity("https://fake-news-detection-ingestion.herokuapp.com/v1/api/news/providers/getInterval?" + credentials + "&skip=" + skip + "&count=" + count, ProviderEntity[].class);
         ProviderEntity[] providerArray = response.getBody();
 
         // If the list is null, don't continue.

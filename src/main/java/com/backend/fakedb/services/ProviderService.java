@@ -4,6 +4,7 @@ import com.backend.fakedb.entities.ProviderEntity;
 import com.backend.fakedb.repositories.SessionRepository;
 import com.backend.fakedb.utilities.IngestionLinker;
 import com.backend.fakedb.utilities.IntWrapper;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +16,12 @@ public class ProviderService {
 
     private final SessionRepository sessionRepository;
     private final IngestionLinker ingestionLinker = new IngestionLinker();
+    private final UserPreferencesService userService;
 
     @Autowired
-    public ProviderService(SessionRepository sessionRepository) {
+    public ProviderService(SessionRepository sessionRepository, UserPreferencesService userService) {
         this.sessionRepository = sessionRepository;
+        this.userService = userService;
     }
 
     /**
@@ -50,7 +53,16 @@ public class ProviderService {
             return null;
         }
 
-        return ingestionLinker.providerGetInterval(s, c);
+        List<ProviderEntity> providerList = userService.getProviderListForUser(auth_id, token, auth_id, 0, 10);
+
+        StringBuilder sb = new StringBuilder();
+
+        for(var provider : providerList)
+        {
+            sb.append("list=").append(provider.getId()).append("&");
+        }
+        
+        return ingestionLinker.providerGetIntervalByArray(s, c, sb.toString());
     }
 
     /**
