@@ -149,17 +149,14 @@ public class UserPreferencesService {
      * @param uid the user ID
      * @param prov_id the provider ID
      * @param status true if the user is subscribed to this particular provider, false otherwise
-     * @return true on success, false otherwise
      */
-    @Transactional
-    public boolean addSubscriptionStatus(int uid, int prov_id, boolean status) {
+    public void addSubscriptionStatus(int uid, int prov_id, boolean status) {
         var user = userRepository.findById(uid);
         var provider = ingestionLinker.providerGetAll().stream().filter(p -> p.getId().equals(prov_id)).findFirst();
         if (user.isEmpty() || provider.isEmpty()) {
-            return false;
+            return;
         }
 
-        upRepository.update(uid, prov_id, status);
-        return true;
+        upRepository.save(new UserPreferencesEntity(uid, prov_id, status));
     }
 }
