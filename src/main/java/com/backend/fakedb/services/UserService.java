@@ -1,5 +1,6 @@
 package com.backend.fakedb.services;
 
+import com.backend.fakedb.entities.ProviderEntity;
 import com.backend.fakedb.entities.SessionEntity;
 import com.backend.fakedb.entities.UserEntity;
 import com.backend.fakedb.repositories.SessionRepository;
@@ -19,11 +20,15 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserPreferencesService upService;
+    private final ProviderService providerService;
     private final SessionRepository sessionRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, SessionRepository sessionRepository) {
+    public UserService(UserRepository userRepository, UserPreferencesService upService, ProviderService providerService, SessionRepository sessionRepository) {
         this.userRepository = userRepository;
+        this.upService = upService;
+        this.providerService = providerService;
         this.sessionRepository = sessionRepository;
     }
 
@@ -65,6 +70,12 @@ public class UserService {
             String plaintextPassword = user.getPasswordHash(); // at this point, the password is still plaintext; it hasn't been hashed yet
             user.setPasswordHash(DigestUtils.sha256Hex(plaintextPassword));
             userRepository.save(user);
+
+            // Add this user (alongside all the providers) into the UserPreferences table
+            List<ProviderEntity> providerList = providerService.getAll();
+            for (ProviderEntity p : providerList) {
+                upService.addSubscriptionStatus(user.getId(), p.getId(), false);
+            }
             return true;
         }
         return false;
