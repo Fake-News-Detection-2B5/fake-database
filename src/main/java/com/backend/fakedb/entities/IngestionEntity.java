@@ -13,8 +13,6 @@ public class IngestionEntity {
 
     String thumbnail;
 
-    String content;
-
     String description;
 
     Date postDate;
@@ -24,11 +22,10 @@ public class IngestionEntity {
     public IngestionEntity() {
     }
 
-    public IngestionEntity(UUID id, String title, String thumbnail, String content, String description, Date postDate, String url) {
+    public IngestionEntity(UUID id, String title, String thumbnail, String description, Date postDate, String url) {
         this.id = id;
         this.title = title;
         this.thumbnail = thumbnail;
-        this.content = content;
         this.description = description;
         this.postDate = postDate;
         this.url = url;
@@ -58,13 +55,6 @@ public class IngestionEntity {
         this.thumbnail = thumbnail;
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
 
     public String getDescription() {
         return description;

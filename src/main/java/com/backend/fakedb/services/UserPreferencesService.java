@@ -8,6 +8,7 @@ import com.backend.fakedb.repositories.UserRepository;
 import com.backend.fakedb.utilities.IngestionLinker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -127,6 +128,7 @@ public class UserPreferencesService {
      * @param status subscription status (true, if the user wants to be subscribed and false, otherwise)
      * @return true, if the process was successful and false, otherwise
      */
+    @Transactional
     public boolean updateSubscriptionStatus(int auth_id, String token, int uid, int prov_id, boolean status) {
         if (sessionRepository.findAll().stream().noneMatch(session -> session.getUser_id() == auth_id && session.getToken().equals(token))) {
             return false;

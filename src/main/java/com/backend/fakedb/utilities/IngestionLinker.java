@@ -190,7 +190,7 @@ public class IngestionLinker {
     private AiEntity convertToAiEntity(IngestionEntity ingestionEntity) {
         return new AiEntity(ingestionEntity.getId().hashCode(),
                 ingestionEntity.getTitle(),
-                ingestionEntity.getContent());
+                ingestionEntity.getDescription());
     }
 
     /**
