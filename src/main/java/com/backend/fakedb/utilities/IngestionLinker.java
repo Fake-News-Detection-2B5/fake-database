@@ -118,7 +118,7 @@ public class IngestionLinker {
 
         // The response will return providers from the database, according to the skip and count parameters
         ResponseEntity<ProviderEntity[]> response =
-                ingestion.getForEntity("https://fake-news-detection-ingestion.herokuapp.com/v1/api/news/providers/getInterval?" + credentials + "&skip=" + skip + "&count=" + count, ProviderEntity[].class);
+                ingestion.getForEntity("https://fake-news-detection-ingestion.herokuapp.com/v1/api/news/providers/getIntervalByArray?" + credentials + "&skip=" + skip + "&count=" + count, ProviderEntity[].class);
         ProviderEntity[] providerArray = response.getBody();
 
         // If the list is null, don't continue.
