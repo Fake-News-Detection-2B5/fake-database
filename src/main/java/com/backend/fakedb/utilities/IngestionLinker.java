@@ -7,6 +7,7 @@ import com.backend.fakedb.entities.ProviderEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -48,7 +49,13 @@ public class IngestionLinker {
             return null;
         }
 
-        return getPostEntities(ingestionArray);
+        // return getPostEntities(ingestionArray);
+        List<PostEntity> postEntityList = new ArrayList<>(ingestionArray.length);
+        for (IngestionEntity i : ingestionArray) {
+            postEntityList.add(convertToPostEntity(i, "dont-believe-this"));
+        }
+        return postEntityList;
+
     }
 
     /**
@@ -80,6 +87,7 @@ public class IngestionLinker {
     /**
      * Public method for getting a list of all the ProviderEntity objects from the posts database.
      * @return the list
+     * @deprecated method no longer needed (24 May 2021)
      */
     public List<ProviderEntity> providerGetAll() {
 
@@ -204,7 +212,7 @@ public class IngestionLinker {
                 ingestionEntity.getTitle(),
                 ingestionEntity.getThumbnail(),
                 ingestionEntity.getDescription(),
-                ingestionEntity.getPostDate(),
+                Date.valueOf(ingestionEntity.getPostDate()),
                 score,
                 ingestionEntity.getUrl());
     }
