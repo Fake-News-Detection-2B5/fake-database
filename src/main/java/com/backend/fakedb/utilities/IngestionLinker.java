@@ -61,12 +61,12 @@ public class IngestionLinker {
             return null;
         }
 
-        // return getPostEntities(ingestionArray);
-        List<PostEntity> postEntityList = new ArrayList<>(ingestionArray.length);
-        for (IngestionEntity i : ingestionArray) {
-            postEntityList.add(convertToPostEntity(i, "dont-believe-this"));
-        }
-        return postEntityList;
+        return getPostEntities(ingestionArray);
+//        List<PostEntity> postEntityList = new ArrayList<>(ingestionArray.length);
+//        for (IngestionEntity i : ingestionArray) {
+//            postEntityList.add(convertToPostEntity(i, "dont-believe-this"));
+//        }
+//        return postEntityList;
 
     }
 
@@ -93,12 +93,12 @@ public class IngestionLinker {
             return null;
         }
 
-        // return getPostEntities(ingestionArray);
-        List<PostEntity> postEntityList = new ArrayList<>(ingestionArray.length);
-        for (IngestionEntity i : ingestionArray) {
-            postEntityList.add(convertToPostEntity(i, "dont-believe-this"));
-        }
-        return postEntityList;
+        return getPostEntities(ingestionArray);
+//        List<PostEntity> postEntityList = new ArrayList<>(ingestionArray.length);
+//        for (IngestionEntity i : ingestionArray) {
+//            postEntityList.add(convertToPostEntity(i, "dont-believe-this"));
+//        }
+//        return postEntityList;
     }
 
     /**
@@ -160,7 +160,7 @@ public class IngestionLinker {
      * @return  the count
      * */
 
-    public IntWrapper providerSearchCount(String queryToBeContained){
+    public IntWrapper providerSearchCount(String queryToBeContained) {
         ResponseEntity<IntWrapper> response =
                 ingestion.getForEntity("https://fake-news-detection-ingestion.herokuapp.com/v1/api/news/searchCount?query=" + queryToBeContained, IntWrapper.class);
         return response.getBody();
@@ -175,7 +175,7 @@ public class IngestionLinker {
      * @return the specified list
      */
 
-    public List<ProviderEntity> providerSearch(String query, int skip, int count){
+    public List<ProviderEntity> providerSearch(String query, int skip, int count) {
         if (skip < 0 || count < 1) {
             return null;
         }
