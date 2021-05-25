@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin(maxAge = 3600)
+@CrossOrigin
 @RestController
 @RequestMapping("user")
 public class UserController {
