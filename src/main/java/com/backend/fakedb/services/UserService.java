@@ -144,7 +144,8 @@ public class UserService {
                 return Optional.of(new LoginResponseWrapper(user.getId(), maybeSession.get().getToken()));
             } else {
                 String token = RandomStringUtils.randomAlphanumeric(64);
-                var newSession = new SessionEntity((int) (sessionRepository.count() + 1), user.getId(), token);
+                // var newSession = new SessionEntity((int) (sessionRepository.count() + 1), user.getId(), token);
+                var newSession = new SessionEntity(user.getId(), token);
                 sessionRepository.save(newSession);
                 return Optional.of(new LoginResponseWrapper(user.getId(), token));
             }

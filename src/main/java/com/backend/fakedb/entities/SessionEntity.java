@@ -9,6 +9,7 @@ public class SessionEntity {
 
     // session id
     @Id
+    @GeneratedValue
     int id;
 
     // user's id for the session
@@ -18,6 +19,11 @@ public class SessionEntity {
     String token;
 
     public SessionEntity() {
+    }
+
+    public SessionEntity(int user_id, String token) {
+        this.user_id = user_id;
+        this.token = token;
     }
 
     public SessionEntity(int id, int user_id, String token) {
